@@ -1,0 +1,14 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+    "title": "Run BGInfo at logon.",
+    "publisher": "JeffGilb",
+    "description": "Schedules sysinternals BgInfo (by Mark Russinovich) to run them at logon. IMPORTANT: This requires that the sysinternals Artifact has been run first.",
+    "tags": [
+        "Windows"
+    ],
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/mydevtestlabs/master/dev/jeffgilb.png",
+    "targetOsType": "Windows",
+    "runCommand": {
+        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./bginfo.ps1')]"
+    }
+}
