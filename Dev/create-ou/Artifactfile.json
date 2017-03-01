@@ -6,7 +6,7 @@
     "tags": [
         "PowerShell"
     ],
-    "iconUri": "https://raw.githubusercontent.com/jeffgilb/mydevtestlabs/master/Dev/create-ou/jeff.png",
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/create-ou/jeff.png",
     "targetOsType": "Windows",
     "parameters": {
         "scriptFileUris": {
