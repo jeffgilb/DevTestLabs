@@ -6,9 +6,9 @@
     "tags": [
         "Windows"
     ],
-    "iconUri": "https://raw.githubusercontent.com/jeffgilb/mydevtestlabs/master/Dev/create-file/jeff.png",
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/create-file/jeff.png",
     "targetOsType": "Windows",
     "runCommand": {
-        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./CreateFile.ps1 -PackageList ', 'myfile', '\"')]"
+        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass -File CreateFile.ps1')]"
     }
 }
