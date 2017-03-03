@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
     "title": "Configure Lab DC",
     "publisher": "JeffGilb",
-    "description": "Performs base configurations on DC: creates a custom Startup shortcut for bginfo from Sysinternals (by Mark Russinovich). Uses a custom config file (.bgi) co-located with bginfo.exe. IMPORTANT: This requires that the Sysinternals Artifact has been run first! Then turns off IE advanced security, installs Active Directory Users and Computers snap-in, creates OU for joining lab VMs to, & creates an OU to sync with Azure AD.",
+    "description": "Performs base configurations on DC: turns off IE advanced security, installs Active Directory Users and Computers snap-in, then creates a custom Startup shortcut for bginfo from Sysinternals (by Mark Russinovich). Uses a custom config file (.bgi) co-located with bginfo.exe. IMPORTANT: This requires that the Sysinternals Artifact has been run first!",
     "tags": [
         "Windows"
     ],
