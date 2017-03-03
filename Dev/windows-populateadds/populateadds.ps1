@@ -3,12 +3,6 @@
 # Get distinguished name of local domain (i.e. DC=corp,DC=jeffgilb,DC=com)
 $LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName    
 
-# Create a demo computers OU to add new lab VMs to
-New-ADOrganizationalUnit -Name "Demo VMs" -Description "Demo Virtual Machines" -PassThru
-
-# Create a cloud users OU to synchronize with Azure AD
-New-ADOrganizationalUnit -Name "Cloud Users" -Description "Users to sync with AAD" -PassThru
-
 $users = import-csv finance.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
