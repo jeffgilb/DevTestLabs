@@ -21,8 +21,8 @@
             "allowEmpty": true
         }
     },
-        "runcommand": {
-            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./createou.ps1, ' ', parameters('OUname'), ' ', parameters('OUdescription'))]"
+    "runcommand": {
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./createou.ps1, ' ', parameters('OUname'), ' ', parameters('OUdescription'))]"
         }
     }
 }
