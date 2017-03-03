@@ -1,0 +1,14 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+    "title": "Configure Lab Domain Controller",
+    "publisher": "JeffGilb",
+    "description": "Does all the stuff.",
+    "tags": [
+        "Windows"
+    ],
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+    "targetOsType": "Windows",
+    "runCommand": {
+        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./configDC.ps1')]"
+    }
+}
