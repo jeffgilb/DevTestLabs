@@ -1,0 +1,14 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+    "title": "Configure Lab DC",
+    "publisher": "JeffGilb",
+    "description": "Performs base configurations on DC: turns off IE advanced security, installs Active Directory Users and Computers snap-in, creates OU for joining lab VMs to, creates an OU to sync with Azure AD, & creates seven user OUs and populates them with over 1,000 MS Press ficticious name users.",
+    "tags": [
+        "Windows"
+    ],
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+    "targetOsType": "Windows",
+    "runCommand": {
+        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./configDC.ps1')]"
+    }
+}
