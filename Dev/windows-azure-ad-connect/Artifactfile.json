@@ -1,0 +1,14 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+    "title": "Install Azure AD Connect",
+    "publisher": "JeffGilb",
+    "description": "Installs Azure AD Connect.",
+    "tags": [
+        "Windows"
+    ],
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+    "targetOsType": "Windows",
+    "runCommand": {
+        "commandToExecute": "['https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi /passive']"
+    }
+}
