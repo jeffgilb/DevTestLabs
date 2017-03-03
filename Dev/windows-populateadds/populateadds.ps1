@@ -1,5 +1,11 @@
 ﻿# Create OU structure and populate with MS Press ficticious users       
 
+# Create custom VM and cloud sync OUs
+New-ADOrganizationalUnit -Name "Demo VMs" -Description "Demo Virtual Machines" -PassThru
+
+# Create a cloud users OU to synchronize with Azure AD
+New-ADOrganizationalUnit -Name "Cloud Users" -Description "Users to sync with AAD" -PassThru
+
 # Get distinguished name of local domain (i.e. DC=corp,DC=jeffgilb,DC=com)
 $LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName    
 

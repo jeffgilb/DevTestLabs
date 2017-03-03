@@ -9,12 +9,6 @@ Stop-Process -Name Explorer
 Import-Module ServerManager
 Add-WindowsFeature RSAT-ADDS-Tools
 
-# Create a demo computers OU to add new lab VMs to
-New-ADOrganizationalUnit -Name "Demo VMs" -Description "Demo Virtual Machines" -PassThru
-
-# Create a cloud users OU to synchronize with Azure AD
-New-ADOrganizationalUnit -Name "Cloud Users" -Description "Users to sync with AAD" -PassThru
-
 #Copy Bginfo config file to sysinternals directory & place shortcut in StartUp folder
 Copy-Item .\Bginfo.bgi "C:\ProgramData\chocolatey\lib\sysinternals\tools\Bginfo.bgi"
 Copy-Item .\Bginfo.lnk "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
