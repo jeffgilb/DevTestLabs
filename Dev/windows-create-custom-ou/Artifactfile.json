@@ -22,7 +22,7 @@
         }
     },
     "runcommand": {
-            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass -File ./createou.ps1, ' ', parameters('OUname'), ' ', parameters('OUdescription'))]"
+            "commandToExecute": "['powershell.exe -executionpolicy bypass -File createou.ps1, ' ', parameters('OUname'), ' ', parameters('OUdescription'))]"
         }
     }
 }
