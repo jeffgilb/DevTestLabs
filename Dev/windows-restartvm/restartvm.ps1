@@ -1,4 +1,5 @@
 # Restarts VM
-shutdown /r /t 0 /c "Restart required to continue applying artifacts."
+# This will show up in the System event log as Event ID 1076
+shutdown /r /t 0 /c "Restart required and initiated by Azure DevTestLabs artifact." /d p:4:2
 
 Exit
