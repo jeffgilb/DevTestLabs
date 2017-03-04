@@ -10,12 +10,12 @@
   "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
   "targetOsType": "Windows",
   "parameters": {
-    "Name": {
+    "OUName": {
       "type": "string",
       "displayName": "OU Name",
       "description": "Specifies the name of the object. This parameter sets the Name property of the Active Directory object. The LDAP Display Name (ldapDisplayName) of this property is \"name\"."
     },
-    "Description": {
+    "OUDescription": {
       "type": "string",
       "displayName": "OU Description",
       "description": "Specifies a description of the object. This parameter sets the value of the Description property for the object. The LDAP Display Name (ldapDisplayName) for this property is \"description\".",
@@ -23,6 +23,6 @@
     }
   },
   "runCommand": {
-    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./createou.ps1 -Name ''', parameters('Name'), ''' -Description ''', parameters('Description'), '''')]"
+    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./createou.ps1 -OuName ''', parameters('OUName'), ''' -OUDescription ''', parameters('OUDescription'), '''')]"
   }
 }
