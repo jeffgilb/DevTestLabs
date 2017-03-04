@@ -68,6 +68,12 @@ Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
 Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
 # Stop-Process -Name Explorer
 
+#Add Domain Controller to Enterprise Admins security group
+$LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName 
+$DomainDC = dsquery computer "ou=Domain Controllers,$LDAPPath"
+$DomainGroup = “CN=Enterprise Admins,CN=Users,$LDAPPath"
+dsmod group $DomainGroup -addmbr $DomainDC
+
 # Install Active Directory Users and Computers
 Import-Module ServerManager
 Add-WindowsFeature RSAT-ADDS-Tools
