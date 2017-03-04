@@ -1,28 +1,28 @@
 {
-    "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
-    "title": "Create custom OU",
-    "description": "Use this to create a custom organizational unit at root of AD DS.",
-    "publisher": "JeffGilb",
-    "tags": [
-        "AD DS"
-    ],
-    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
-    "targetOsType": "Windows",
-    "parameters": {
-        "OUname": {
-            "type": "string",
-            "displayName": "OU Name",
-            "description": "New OU name."
-        },
-        "OUdescription": {
-            "type": "string",
-            "displayName": "OU Description",
-            "description": "New OU description.",
-            "allowEmpty": true
-        }
+  "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+  "title": "Create Custom OU",
+  "description": "Creates a custom organizational unit.",
+  "publisher": "JeffGilb",
+  "tags": [
+    "AD",
+	"DS"
+  ],
+  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+  "targetOsType": "Windows",
+  "parameters": {
+    "OUName": {
+      "type": "string",
+      "displayName": "OU Name",
+      "description": "Specifies the name of the object. This parameter sets the Name property of the Active Directory object. The LDAP Display Name (ldapDisplayName) of this property is \"name\"."
     },
-    "runcommand": {
-            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass -File ./createou.ps1',' -Name ',parameters('OUname'),' -Description ',parameters('OUdescription'))]"
-        }
+    "OUDescription": {
+      "type": "string",
+      "displayName": "OU Description",
+      "description": "Specifies a description of the object. This parameter sets the value of the Description property for the object. The LDAP Display Name (ldapDisplayName) for this property is \"description\".",
+      "allowEmpty": true
     }
+  },
+  "runCommand": {
+    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./createou.ps1 -Name ''', parameters('OUName'), ''' -Description ''', parameters('OUDescription'), '''')]"
+  }
 }
