@@ -1,11 +1,4 @@
-﻿param(
-      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [String] $OUName,
-      [Parameter(valueFromPipeline=$true)]
-	  [String] $OUDescription
-)
-
-###################################################################################################
+﻿###################################################################################################
 
 #
 # PowerShell configurations
