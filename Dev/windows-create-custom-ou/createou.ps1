@@ -1,8 +1,8 @@
 param(
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [String] $OUName,
+	  [String] $Name,
       [Parameter(valueFromPipeline=$true)]
-	  [String] $OUDescription
+	  [String] $Description
 )
 
 ###################################################################################################
@@ -64,7 +64,7 @@ trap
 
 try
 {
-	New-ADOrganizationalUnit -Name "$OUName" -Description "$OUDescription" -PassThru
+	New-ADOrganizationalUnit -Name "$Name" -Description "$Description" -PassThru
 }
 finally
 {
