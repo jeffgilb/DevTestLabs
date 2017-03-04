@@ -1,7 +1,7 @@
 {
     "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
     "title": "Create custom OU",
-    "description": "Use this to create a custom organizational unit.",
+    "description": "Use this to create a custom organizational unit at root of AD DS.",
     "publisher": "JeffGilb",
     "tags": [
         "AD DS"
@@ -22,7 +22,7 @@
         }
     },
     "runcommand": {
-            "commandToExecute": "['powershell.exe -executionpolicy bypass -File createou.ps1, ' ', parameters('OUname'), ' ', parameters('OUdescription'))]"
+            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./createou.ps1 ''', parameters('OUname'), ''' ''', parameters('OUdescription'), '''')]"
         }
     }
 }
