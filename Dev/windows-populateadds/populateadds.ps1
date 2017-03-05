@@ -4,9 +4,9 @@
 # PowerShell configurations
 #
 
-# NOTE: Because the $ErrorActionPreference is "Stop", this script will stop on first failure.
+# NOTE: Because the $ErrorActionPreference is "Continue", this script will continue on failure.
 #       This is necessary to ensure we capture errors inside the try-catch-finally block.
-$ErrorActionPreference = "SilentlyContinue"
+$ErrorActionPreference = "Continue"
 
 # Ensure we set the working directory to that of the script.
 pushd $PSScriptRoot
@@ -27,6 +27,15 @@ function Handle-LastError
     if ($message)
     {
         Write-Host -Object "ERROR: $message" -ForegroundColor Red
+    }
+
+function FuncCheckService{
+    param($ServiceName)
+    $arrService = Get-Service -Name $ServiceName
+    if ($arrService.Status -ne "Running"){
+        Start-Sleep -s 60
+	Restart-Service ADWS
+	Start-Sleep -s 60
     }
     
     # IMPORTANT NOTE: Throwing a terminating error (using $ErrorActionPreference = "Stop") still
@@ -63,14 +72,7 @@ try
 #$DomainGroup = “CN=Enterprise Admins,CN=Users,$LDAPPath"
 #dsmod group $DomainGroup -addmbr $DomainDC
 
-function FuncCheckService{
-    param($ServiceName)
-    $arrService = Get-Service -Name $ServiceName
-    if ($arrService.Status -ne "Running"){
-        Start-Sleep -s 60
-	Restart-Service ADWS
-	Start-Sleep -s 60
-    }
+
 }
  
 FuncCheckService -ServiceName ADWS
