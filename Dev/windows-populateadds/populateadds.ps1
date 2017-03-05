@@ -29,7 +29,8 @@ function Handle-LastError
         Write-Host -Object "ERROR: $message" -ForegroundColor Red
     }
 
-function FuncCheckService{
+function FuncCheckService
+{
     param($ServiceName)
     $arrService = Get-Service -Name $ServiceName
     if ($arrService.Status -ne "Running"){
