@@ -28,7 +28,16 @@ function Handle-LastError
     {
         Write-Host -Object "ERROR: $message" -ForegroundColor Red
     }
-    
+
+function FuncCheckService{
+    param($ServiceName)
+    $arrService = Get-Service -Name $ServiceName
+    if ($arrService.Status -ne "Running"){
+        Start-Sleep -s 60
+	Restart-Service ADWS
+	Start-Sleep -s 60
+    }
+
     # IMPORTANT NOTE: Throwing a terminating error (using $ErrorActionPreference = "Stop") still
     # returns exit code zero from the PowerShell script when using -File. The workaround is to
     # NOT use -File when calling this script and leverage the try-catch-finally block and return
@@ -71,18 +80,10 @@ Copy-Item .\Bginfo.lnk "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Sta
 # Install Active Directory Users and Computers
 Import-Module ServerManager
 Add-WindowsFeature RSAT-ADDS-Tools
-
-function FuncCheckService{
-    param($ServiceName)
-    $arrService = Get-Service -Name $ServiceName
-    if ($arrService.Status -ne "Running"){
-        Start-Sleep -s 60
-	Restart-Service ADWS
-	Start-Sleep -s 60
-    }
-}
  
 FuncCheckService -ServiceName ADWS
+
+Start-Sleep -s 300
 
 # Create OU structure and populate with MS Press ficticious users       
 
