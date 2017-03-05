@@ -29,6 +29,12 @@ function Handle-LastError
         Write-Host -Object "ERROR: $message" -ForegroundColor Red
     }
 
+    # IMPORTANT NOTE: Throwing a terminating error (using $ErrorActionPreference = "Stop") still
+    # returns exit code zero from the PowerShell script when using -File. The workaround is to
+    # NOT use -File when calling this script and leverage the try-catch-finally block and return
+    # a non-zero exit code from the catch block.
+    exit -1
+
 function FuncCheckService
 {
     param($ServiceName)
@@ -38,12 +44,6 @@ function FuncCheckService
 	Restart-Service ADWS
 	Start-Sleep -s 60
     }
-    
-    # IMPORTANT NOTE: Throwing a terminating error (using $ErrorActionPreference = "Stop") still
-    # returns exit code zero from the PowerShell script when using -File. The workaround is to
-    # NOT use -File when calling this script and leverage the try-catch-finally block and return
-    # a non-zero exit code from the catch block.
-    exit -1
 }
 
 ###################################################################################################
@@ -75,7 +75,7 @@ try
  
 FuncCheckService -ServiceName ADWS
 
-Start-Sleep -s 300
+# Start-Sleep -s 300
 
 # Create OU structure and populate with MS Press ficticious users       
 
