@@ -68,15 +68,13 @@ Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
 Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
 # Stop-Process -Name Explorer
 
-#Add Domain Controller to Enterprise Admins security group
-$LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName 
-$DomainDC = dsquery computer "ou=Domain Controllers,$LDAPPath"
-$DomainGroup = “CN=Enterprise Admins,CN=Users,$LDAPPath"
-dsmod group $DomainGroup -addmbr $DomainDC
-
 # Install Active Directory Users and Computers
 Import-Module ServerManager
 Add-WindowsFeature RSAT-ADDS-Tools
+
+# Set AD Web Service to delayed start. 
+# This avoids getting an error when trying to add directory objects: "This computer is now hosting the specified directory instance, but Active Directory Web Services could not service it. Active Directory Web Services will retry this operation periodically"
+cmd.exe sc config ADWS start= delayed-auto
 
 }
 finally
