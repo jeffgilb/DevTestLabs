@@ -1,2 +1,0 @@
-import-module activedirectory
-Start-Sleep -s 10
