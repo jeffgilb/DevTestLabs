@@ -68,11 +68,21 @@ Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
 Copy-Item .\Bginfo.bgi "C:\ProgramData\chocolatey\lib\sysinternals\tools\Bginfo.bgi"
 Copy-Item .\Bginfo.lnk "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
 
-#Add Domain Controller to Enterprise Admins security group
-$LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName 
-$DomainDC = dsquery computer "ou=Domain Controllers,$LDAPPath"
-$DomainGroup = “CN=Enterprise Admins,CN=Users,$LDAPPath"
-dsmod group $DomainGroup -addmbr $DomainDC
+# Install Active Directory Users and Computers
+Import-Module ServerManager
+Add-WindowsFeature RSAT-ADDS-Tools
+
+function FuncCheckService{
+    param($ServiceName)
+    $arrService = Get-Service -Name $ServiceName
+    if ($arrService.Status -ne "Running"){
+        Start-Sleep -s 60
+	Restart-Service ADWS
+	Start-Sleep -s 60
+    }
+}
+ 
+FuncCheckService -ServiceName ADWS
 
 # Create OU structure and populate with MS Press ficticious users       
 
@@ -85,10 +95,10 @@ New-ADOrganizationalUnit -Name "Cloud Users" -Description "Users to sync with AA
 # Get distinguished name of local domain (i.e. DC=corp,DC=jeffgilb,DC=com)
 $LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName    
 
+New-ADOrganizationalUnit -Name Finance -Description "Finance Users" -PassThru
 $users = import-csv finance.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
-    New-ADOrganizationalUnit -Name Finance -Description "Finance Users" -PassThru
     $OU = "OU = Finance," + $LDAPPath  
     $Password = $User.password 
     $Detailedname = $User.firstname + " " + $User.name 
@@ -103,10 +113,10 @@ foreach ($User in $Users)
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
 
+New-ADOrganizationalUnit -Name Legal -Description "Legal Users" -PassThru
 $users = import-csv legal.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
-    New-ADOrganizationalUnit -Name Legal -Description "Legal Users" -PassThru
     $OU = "OU = Legal," + $LDAPPath  
     $Password = $User.password 
     $Detailedname = $User.firstname + " " + $User.name 
@@ -121,10 +131,10 @@ foreach ($User in $Users)
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
 
+New-ADOrganizationalUnit -Name Marketing -Description "Marketing Users" -PassThru  
 $users = import-csv marketing.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
-    New-ADOrganizationalUnit -Name Marketing -Description "Marketing Users" -PassThru    
     $OU = "OU = Marketing," + $LDAPPath  
     $Password = $User.password 
     $Detailedname = $User.firstname + " " + $User.name 
@@ -139,10 +149,10 @@ foreach ($User in $Users)
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
 
+New-ADOrganizationalUnit -Name Sales -Description "Sales Users" -PassThru
 $users = import-csv sales.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
-    New-ADOrganizationalUnit -Name Sales -Description "Sales Users" -PassThru     
     $OU = "OU = Sales," + $LDAPPath 
     $Password = $User.password 
     $Detailedname = $User.firstname + " " + $User.name 
@@ -157,10 +167,10 @@ foreach ($User in $Users)
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
 
+New-ADOrganizationalUnit -Name IT -Description "IT Users" -PassThru
 $users = import-csv it.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
-    New-ADOrganizationalUnit -Name IT -Description "IT Users" -PassThru  
     $OU = "OU = IT," + $LDAPPath 
     $Password = $User.password 
     $Detailedname = $User.firstname + " " + $User.name 
@@ -175,10 +185,10 @@ foreach ($User in $Users)
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
 
+New-ADOrganizationalUnit -Name Operations -Description "Operations Users" -PassThru
 $users = import-csv operations.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
-    New-ADOrganizationalUnit -Name Operations -Description "Operations Users" -PassThru  
     $OU = "OU = Operations," + $LDAPPath   
     $Password = $User.password 
     $Detailedname = $User.firstname + " " + $User.name 
@@ -193,27 +203,23 @@ foreach ($User in $Users)
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
 
+New-ADOrganizationalUnit -Name Regional -Description "Regional Users" -PassThru
 $users = import-csv regional.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
-   New-ADOrganizationalUnit -Name Regional -Description "Regional Users" -PassThru  
-   $OU = "OU = Regional," + $LDAPPath   
-   Password = $User.password 
-   $Detailedname = $User.firstname + " " + $User.name 
-   $UserFirstname = $User.Firstname 
-   $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-   $SAM =  $FirstLetterFirstname + $User.name 
-   $Description = "Regional user"
-   $Department = "Regional"
-   $Mobile = "123-456-7890"
-   $Telephone = "123-456-7890"
-   $Office = "Regional"
-   New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+    $OU = "OU = Regional," + $LDAPPath   
+    $Password = $User.password 
+    $Detailedname = $User.firstname + " " + $User.name 
+    $UserFirstname = $User.Firstname 
+    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+    $SAM =  $FirstLetterFirstname + $User.name 
+    $Description = "Regional user"
+    $Department = "Regional"
+    $Mobile = "123-456-7890"
+    $Telephone = "123-456-7890"
+    $Office = "Regional"
+    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
-
-# Install Active Directory Users and Computers
-Import-Module ServerManager
-Add-WindowsFeature RSAT-ADDS-Tools
 	
 }
 finally
