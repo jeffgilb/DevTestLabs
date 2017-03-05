@@ -63,6 +63,10 @@ try
 #$DomainGroup = “CN=Enterprise Admins,CN=Users,$LDAPPath"
 #dsmod group $DomainGroup -addmbr $DomainDC
 
+Start-Sleep -s 60
+Restart-Service ADWS
+Start-Sleep -s 60
+
 # Create OU structure and populate with MS Press ficticious users       
 
 # Create custom VM and cloud sync OUs

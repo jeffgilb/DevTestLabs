@@ -74,7 +74,7 @@ Add-WindowsFeature RSAT-ADDS-Tools
 
 # Set AD Web Service to delayed start. 
 # This avoids getting an error when trying to add directory objects: "This computer is now hosting the specified directory instance, but Active Directory Web Services could not service it. Active Directory Web Services will retry this operation periodically"
-Set-ItemProperty -Path "Registry::HKLM\System\CurrentControlSet\Services\ADWS" -Name "DelayedAutostart" -Value 1 -Type DWORD
+# Set-ItemProperty -Path "Registry::HKLM\System\CurrentControlSet\Services\ADWS" -Name "DelayedAutostart" -Value 1 -Type DWORD
 }
 finally
 {
