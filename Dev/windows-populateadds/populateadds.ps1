@@ -63,9 +63,17 @@ try
 #$DomainGroup = “CN=Enterprise Admins,CN=Users,$LDAPPath"
 #dsmod group $DomainGroup -addmbr $DomainDC
 
-Start-Sleep -s 60
-Restart-Service ADWS
-Start-Sleep -s 60
+function FuncCheckService{
+    param($ServiceName)
+    $arrService = Get-Service -Name $ServiceName
+    if ($arrService.Status -ne "Running"){
+        Start-Sleep -s 60
+	Restart-Service ADWS
+	Start-Sleep -s 60
+    }
+}
+ 
+FuncCheckService -ServiceName ADWS
 
 # Create OU structure and populate with MS Press ficticious users       
 
@@ -78,6 +86,7 @@ New-ADOrganizationalUnit -Name "Cloud Users" -Description "Users to sync with AA
 # Get distinguished name of local domain (i.e. DC=corp,DC=jeffgilb,DC=com)
 $LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName    
 
+Start-Sleep -s 10
 $users = import-csv finance.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
@@ -96,6 +105,7 @@ foreach ($User in $Users)
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
 
+Start-Sleep -s 10
 $users = import-csv legal.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
