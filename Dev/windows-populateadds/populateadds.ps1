@@ -75,6 +75,8 @@ function FuncCheckService{
  
 FuncCheckService -ServiceName ADWS
 
+Start-Sleep -s 300
+
 # Create OU structure and populate with MS Press ficticious users       
 
 # Create custom VM and cloud sync OUs
