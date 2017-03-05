@@ -71,9 +71,6 @@ try
 #$DomainDC = dsquery computer "ou=Domain Controllers,$LDAPPath"
 #$DomainGroup = “CN=Enterprise Admins,CN=Users,$LDAPPath"
 #dsmod group $DomainGroup -addmbr $DomainDC
-
-
-}
  
 FuncCheckService -ServiceName ADWS
 
