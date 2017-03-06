@@ -29,6 +29,6 @@
    }
    },
   "runCommand": {
-    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./InstallATA.ps1 -CenterIpAddress ''', parameters('CenterIpAddress'), ''' -CenterPort ''', parameters('CenterPort'), ''', -ConsoleIP ''', parameters('ConsoleIP'), '''')]"
+    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./InstallATA.ps1 -CenterIpAddress ''', parameters('CenterIpAddress'), ''' -CenterPort ''', parameters('CenterPort'), ''' -ConsoleIP ''', parameters('ConsoleIP'), '''')]"
    }
   }
