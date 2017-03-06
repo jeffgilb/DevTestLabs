@@ -1,6 +1,6 @@
 param(
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [String] $Time,
+	  [Number] $Seconds,
 )
 
 ###################################################################################################
@@ -44,7 +44,7 @@ trap
 
 try
 {
-	Start-Sleep -s "$Time"
+	Start-Sleep -s "$Seconds"
 }
 finally
 {
