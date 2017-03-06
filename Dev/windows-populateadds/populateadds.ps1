@@ -1,22 +1,13 @@
 ﻿###################################################################################################
-
-#
 # PowerShell configurations
-#
-
 # NOTE: Because the $ErrorActionPreference is "Continue", this script will continue on failure.
 #       This is necessary to ensure we capture errors inside the try-catch-finally block.
 $ErrorActionPreference = "Continue"
-
 # Ensure we set the working directory to that of the script.
 pushd $PSScriptRoot
 
 ###################################################################################################
-
-#
 # Functions used in this script.
-#
-
 function Handle-LastError
 {
     [CmdletBinding()]
@@ -29,6 +20,12 @@ function Handle-LastError
         Write-Host -Object "ERROR: $message" -ForegroundColor Red
     }
 
+    # IMPORTANT NOTE: Throwing a terminating error (using $ErrorActionPreference = "Stop") still
+    # returns exit code zero from the PowerShell script when using -File. The workaround is to
+    # NOT use -File when calling this script and leverage the try-catch-finally block and return
+    # a non-zero exit code from the catch block.
+    exit -0
+
 function FuncCheckService
 {
     param($ServiceName)
@@ -38,44 +35,21 @@ function FuncCheckService
 	Restart-Service ADWS
 	Start-Sleep -s 60
     }
-    
-    # IMPORTANT NOTE: Throwing a terminating error (using $ErrorActionPreference = "Stop") still
-    # returns exit code zero from the PowerShell script when using -File. The workaround is to
-    # NOT use -File when calling this script and leverage the try-catch-finally block and return
-    # a non-zero exit code from the catch block.
-    exit -1
 }
-
 ###################################################################################################
-
-#
 # Handle all errors in this script.
-#
-
 trap
 {
     # NOTE: This trap will handle all errors. There should be no need to use a catch below in this
     #       script, unless you want to ignore a specific error.
     Handle-LastError
 }
-
 ###################################################################################################
-
-#
 # Main execution block.
-#
-
 try
 {
-#Add Domain Controller to Enterprise Admins security group
-#$LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName 
-#$DomainDC = dsquery computer "ou=Domain Controllers,$LDAPPath"
-#$DomainGroup = “CN=Enterprise Admins,CN=Users,$LDAPPath"
-#dsmod group $DomainGroup -addmbr $DomainDC
- 
-FuncCheckService -ServiceName ADWS
 
-Start-Sleep -s 300
+FuncCheckService -ServiceName ADWS
 
 # Create OU structure and populate with MS Press ficticious users       
 
