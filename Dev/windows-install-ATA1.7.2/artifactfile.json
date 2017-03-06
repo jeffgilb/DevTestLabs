@@ -10,19 +10,19 @@
   ],
   "parameters": {
     "CenterIpAddress": {
-      "type": "int",
+      "type": "string",
       "displayName": "IP Address to use for ATA Center 1.7.2 installation.",
       "description": "Specifies the IP address to use for the CenterIpAddress installation value.",
       "defaultValue": "192.168.0.10"
     },
     "CenterPort": {
-      "type": "int",
+      "type": "string",
       "displayName": "Port to use for ATA Center 1.7.2.",
       "description": "Specifies the port number to use for the CenterPort installation value.",
       "defaultValue": "444"
     },
     "ConsoleIP": {
-      "type": "int",
+      "type": "string",
       "displayName": "IP address to use for ATA console installation.",
       "description": "Specifies the IP address to use for the ConsoleIP installation value.",
       "defaultValue": "192.168.0.10"
