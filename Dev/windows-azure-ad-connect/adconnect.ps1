@@ -70,8 +70,8 @@ try
     Write-Host "Downloading file from $Uri"
     Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 
-    $Path + " /passive ALLUSERS=1"
-}
+    "MSIEXEC /i C:\Packages\AzureADConnect.msi /passive ALLUSERS=1"
+
 finally
 {
     popd
