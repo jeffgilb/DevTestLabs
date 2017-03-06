@@ -10,7 +10,7 @@
   "targetOsType": "Windows",
   "parameters": {
     "Seconds": {
-      "type": "number",
+      "type": "string",
       "displayName": "Pause length (in seconds)",
       "description": "Specifies the name of the object. This parameter sets the Name property of the Active Directory object. The LDAP Display Name (ldapDisplayName) of this property is \"name\"."
       "defaultValue": "300"
