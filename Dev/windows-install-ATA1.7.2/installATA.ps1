@@ -49,9 +49,8 @@ trap
 try
 {
 # Install Microsoft ATA Center: ATA 1.7.2
-
-start-process -file C:\Packages\"Microsoft ATA Center Setup.exe" /q --LicenseAccepted NetFrameworkCommandLineArguments="/q" CenterIpAddress=$CenterIpAddress CenterPort=$CenterPort ConsoleIpAddress=$ConsoleIP
-
+C:\Packages\"Microsoft ATA Center Setup.exe" /q --LicenseAccepted NetFrameworkCommandLineArguments="/q" CenterIpAddress=$CenterIpAddress CenterPort=$CenterPort ConsoleIpAddress=$ConsoleIP
+write-host "Microsoft ATA Center Setup"
 }
 finally
 {
