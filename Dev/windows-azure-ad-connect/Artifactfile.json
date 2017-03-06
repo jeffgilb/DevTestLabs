@@ -9,6 +9,6 @@
     "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
     "targetOsType": "Windows",
     "runCommand": {
-        "commandToExecute": "['AzureADConnect.msi /passive']"
+        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./adconnect.ps1')]"
     }
 }
