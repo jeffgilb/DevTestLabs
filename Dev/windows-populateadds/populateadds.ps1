@@ -25,6 +25,7 @@ function Handle-LastError
     # NOT use -File when calling this script and leverage the try-catch-finally block and return
     # a non-zero exit code from the catch block.
     exit -0
+}
 
 function FuncCheckService
 {
