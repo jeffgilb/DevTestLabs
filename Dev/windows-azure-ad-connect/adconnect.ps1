@@ -55,8 +55,8 @@ try
 # • Microsoft SQL Server 2012 Native Client
 # • Microsoft Visual C++ 2013 Redistribution Package
 
-    $Uri=https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi
-    $Path=C:\Packages
+    $Uri="https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
+    $Path="C:\Packages\AzureADConnect.msi"
     
     # Ensure the path is available.
     if (-not [System.IO.Path]::IsPathRooted($Path))
@@ -70,7 +70,7 @@ try
     Write-Host "Downloading file from $Uri"
     Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 
-    $Path + "\AzureADConnect.msi /passive"
+    $Path /passive"
 }
 finally
 {
