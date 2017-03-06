@@ -1,6 +1,6 @@
 param(
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [Number] $Seconds,
+	  [String] $Seconds
 )
 
 ###################################################################################################
