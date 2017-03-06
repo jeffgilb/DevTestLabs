@@ -54,30 +54,36 @@ $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A
 $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
 Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
 Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
-#Stop-Process -Name Explorer
+write-host "Turned off IE enhanced security configuration."
 
 #Copy Bginfo config file to sysinternals directory & place shortcut in StartUp folder
 Copy-Item .\Bginfo.bgi "C:\ProgramData\chocolatey\lib\sysinternals\tools\Bginfo.bgi"
 Copy-Item .\Bginfo.lnk "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
+write-host "Set up Bginfo to run at startup."
 
 # Install Active Directory Users and Computers
 Import-Module ServerManager
 Add-WindowsFeature RSAT-ADDS-Tools
+write-host "Installed ADUC snap-in."
  
 FuncCheckService -ServiceName ADWS
 
 Start-Sleep -s 300
+write-host "Paused for 5 minutes to allow services to settle."
 
 # Create OU structure and populate with MS Press ficticious users       
 
 # Create custom VM and cloud sync OUs
 New-ADOrganizationalUnit -Name "Demo VMs" -Description "Demo Virtual Machines" -PassThru
+write-host "Created Demo VMs OU."
 
 # Create a cloud users OU to synchronize with Azure AD
 New-ADOrganizationalUnit -Name "Cloud Users" -Description "Users to sync with AAD" -PassThru
+write-host "Created Cloud Users OU."
 
 # Get distinguished name of local domain (i.e. DC=corp,DC=jeffgilb,DC=com)
-$LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName    
+$LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName 
+write-host "Discovered FQDN of local domain to be" + $LDAPPath + "."    
 
 New-ADOrganizationalUnit -Name Finance -Description "Finance Users" -PassThru
 $users = import-csv finance.csv -Delimiter "," -Header Name,FirstName,Password
@@ -96,8 +102,10 @@ foreach ($User in $Users)
     $Office = "Bldg 44"
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
+write-host "Created Finance OU and users."
 
 New-ADOrganizationalUnit -Name Legal -Description "Legal Users" -PassThru
+write-host "Created Legal OU."
 $users = import-csv legal.csv -Delimiter "," -Header Name,FirstName,Password
 foreach ($User in $Users)
 {  
@@ -114,6 +122,7 @@ foreach ($User in $Users)
     $Office = "Bldg 43"
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
+write-host "Created Legal OU and users."
 
 New-ADOrganizationalUnit -Name Marketing -Description "Marketing Users" -PassThru  
 $users = import-csv marketing.csv -Delimiter "," -Header Name,FirstName,Password
@@ -132,6 +141,7 @@ foreach ($User in $Users)
     $Office = "Bldg 3"
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
+write-host "Created Marketing OU and users."
 
 New-ADOrganizationalUnit -Name Sales -Description "Sales Users" -PassThru
 $users = import-csv sales.csv -Delimiter "," -Header Name,FirstName,Password
@@ -150,6 +160,7 @@ foreach ($User in $Users)
     $Office = "Bldg 24"
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
+write-host "Created Sales OU and users."
 
 New-ADOrganizationalUnit -Name IT -Description "IT Users" -PassThru
 $users = import-csv it.csv -Delimiter "," -Header Name,FirstName,Password
@@ -168,6 +179,7 @@ foreach ($User in $Users)
     $Office = "Bldg 8"
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
+write-host "Created IT OU and users."
 
 New-ADOrganizationalUnit -Name Operations -Description "Operations Users" -PassThru
 $users = import-csv operations.csv -Delimiter "," -Header Name,FirstName,Password
@@ -186,6 +198,7 @@ foreach ($User in $Users)
     $Office = "Bldg 5500"
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
+write-host "Created Operations OU and users."
 
 New-ADOrganizationalUnit -Name Regional -Description "Regional Users" -PassThru
 $users = import-csv regional.csv -Delimiter "," -Header Name,FirstName,Password
@@ -204,6 +217,8 @@ foreach ($User in $Users)
     $Office = "Regional"
     New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
 } 
+write-host "Created Regional OU and users."
+write-host "Basic DC configuration complete."
 }
 finally
 {
