@@ -1,20 +1,20 @@
 {
-  "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+  "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2015-01-01/dtlArtifacts.json",
   "title": "Insert Pause",
   "publisher": "JeffGilb",
   "description": "Inserts a pause between steps.",
-  "tags": [
-      "Pause"
-  ],
   "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
   "targetOsType": "Windows",
+    "tags": [
+      "Pause"
+  ],
   "parameters": {
     "Seconds": {
       "type": "string",
       "displayName": "Pause length",
       "description": "Specifies the length of time to pause (in seconds).",
       "defaultValue": "300"
-    },
+    }
   },
   "runCommand": {
     "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./pause.ps1 -Seconds ''', parameters('Seconds'), '''')]"
