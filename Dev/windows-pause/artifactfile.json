@@ -4,20 +4,19 @@
   "description": "Inserts a pause between steps.",
   "publisher": "JeffGilb",
   "tags": [
-    "AD",
-	"DS"
+    "Pause",
   ],
   "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
   "targetOsType": "Windows",
   "parameters": {
-    "Time": {
-      "type": "string",
+    "Seconds": {
+      "type": "number",
       "displayName": "Pause length (in seconds)",
       "description": "Specifies the name of the object. This parameter sets the Name property of the Active Directory object. The LDAP Display Name (ldapDisplayName) of this property is \"name\"."
       "defaultValue": "300"
     },
   },
   "runCommand": {
-    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./pause.ps1 -Time ''', parameters('Time'), '''')]"
+    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./pause.ps1 -Seconds ''', parameters('Seconds'), '''')]"
   }
 }
