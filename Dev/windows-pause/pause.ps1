@@ -44,11 +44,11 @@ trap
 
 try
 {
-	currentTime = Get-Date 
-	Write-Host "Started pause $currentTime" 
+	$currentTime = Get-Date 
+	Write-Host "Started pause at $currentTime." 
 	Start-Sleep -s "$Seconds"
-	currentTime = Get-Date 
-	Write-Host "Pause completed $currentTime" 
+	$currentTime = Get-Date 
+	Write-Host "Pause completed at $currentTime." 
 }
 finally
 {
