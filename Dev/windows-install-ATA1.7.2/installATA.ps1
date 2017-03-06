@@ -1,10 +1,10 @@
 param(
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [Int] $CenterIpAddress,
+	  [int] $CenterIpAddress,
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [Int] $CenterPort,
+	  [int] $CenterPort,
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [Int] $ConsoleIP
+	  [int] $ConsoleIP
 )
 
 ###################################################################################################
