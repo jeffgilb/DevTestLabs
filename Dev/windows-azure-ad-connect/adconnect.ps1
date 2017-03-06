@@ -70,7 +70,7 @@ try
     Write-Host "Downloading file from $Uri"
     Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 
-    $Path\AzureADConnect.msi /passive
+    $Path + "\AzureADConnect.msi /passive"
 }
 finally
 {
