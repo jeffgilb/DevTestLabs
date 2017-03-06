@@ -45,6 +45,7 @@ trap
 try
 {
 	Start-Sleep -s "$Seconds"
+	write-host "Pause complete."
 }
 finally
 {
