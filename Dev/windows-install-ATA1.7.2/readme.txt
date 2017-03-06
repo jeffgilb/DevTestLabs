@@ -1,0 +1,1 @@
+Download the 90 day trial and copy to C:\Packages\ on the target VM before running this artifact.
