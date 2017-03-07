@@ -3,7 +3,7 @@
   "title": "Install Azure AD App Proxy Connector",
   "publisher": "JeffGilb",
   "description": "Installs and registers AAD App Proxy Connector to enable a secure connection between applications inside your network and the Application Proxy. Only one installation is necessary to service all your published applications; a second connector can be installed for high availability purposes.",
-  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/windows-azure-app-proxy/azure.png",
+  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/windows-azure-app-proxy/Azure.PNG",
   "targetOsType": "Windows",
     "tags": [
       "Azure"
