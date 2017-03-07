@@ -76,7 +76,7 @@ try
    # Add user to Microsoft Advanced Threat Analytics Administrators group.
 	$DomainGroup = “Microsoft Advanced Threat Analytics Administrators"
 	Add-ADGroupMember -Identity $DomainGroup -Members $ATAadmin
-
+	write-host "Added $ATAadmin to Microsoft Advanced Threat Analytics Administrators group."
 }
 finally
 {
