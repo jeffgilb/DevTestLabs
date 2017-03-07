@@ -29,9 +29,9 @@
    },
     "ATAadmin": {
       "type": "string",
-      "displayName": "Account to add to ATA Administrator's Group.",
+      "displayName": "User account to add to ATA Administrator's Group.",
       "description": "User to add to Microsoft Advanced Threat Analytics Administrators group.",
-      "defaultValue": "jeff@corp.jeffgilb.com"
+      "defaultValue": "jeff"
    }
    
    },
