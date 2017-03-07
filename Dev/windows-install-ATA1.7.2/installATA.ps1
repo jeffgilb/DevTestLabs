@@ -63,15 +63,17 @@ try
     New-Item -ItemType Directory -Force -Path (Split-Path -parent $Path) | Out-Null
 
    # Download requested file.
- 	Write-Host "Downloading file from " + $Uri
 	Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 	Write-Host "Downloaded ATA bits."
 
    # Install Microsoft ATA Center: ATA 1.7.2
 	C:\Packages\"Microsoft ATA Center Setup.exe" /q --LicenseAccepted NetFrameworkCommandLineArguments="/q" CenterIpAddress=$CenterIpAddress CenterPort=$CenterPort ConsoleIpAddress=$ConsoleIP
 	write-host "Completed Microsoft ATA Center Setup."
+    
+   # Give ATA Setup time to complete
+	Start-Sleep -s 120
 
-    # Add user to Microsoft Advanced Threat Analytics Administrators group.
+   # Add user to Microsoft Advanced Threat Analytics Administrators group.
 	$DomainGroup = “Microsoft Advanced Threat Analytics Administrators"
 	Add-ADGroupMember -Identity $DomainGroup -Members $ATAadmin
 
