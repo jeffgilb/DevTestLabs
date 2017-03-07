@@ -2,8 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2015-01-01/dtlArtifacts.json",
   "title": "Install Azure AD App Proxy Connector",
   "publisher": "JeffGilb",
-  "description": "Installs and registers AAD App Proxy Connector to enable a secure connection between applications inside your network and the Application Proxy. Only one installation is necessary to service all your published applications; a second connector can be installed for high availability purposes."
-.",
+  "description": "Installs and registers AAD App Proxy Connector to enable a secure connection between applications inside your network and the Application Proxy. Only one installation is necessary to service all your published applications; a second connector can be installed for high availability purposes.",
   "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/windows-azure-app-proxy/azure.png",
   "targetOsType": "Windows",
     "tags": [
