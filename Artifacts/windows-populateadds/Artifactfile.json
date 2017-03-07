@@ -1,0 +1,14 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+    "title": "Populate AD DS",
+    "publisher": "JeffGilb",
+    "description": "Creates custom organizational units for lab VMs and users, then populates them with over 1,000 MS Press ficticious named users.",
+    "tags": [
+        "Windows"
+    ],
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+    "targetOsType": "Windows",
+    "runCommand": {
+        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./populateadds.ps1')]"
+    }
+}
