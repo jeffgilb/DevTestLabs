@@ -23,6 +23,6 @@
     }
       },
   "runCommand": {
-    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./aap-connector.ps1 -User ''', parameters('User'), ''' -Password ''', parameters('Password'), '''']"
+    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./aap-connector.ps1 -User ''', parameters('User'), ''' -Password ''', parameters('Password'), '''')]"
    }
   }
