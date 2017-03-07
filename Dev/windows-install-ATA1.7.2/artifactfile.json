@@ -26,9 +26,16 @@
       "displayName": "IP address to use for ATA console installation.",
       "description": "Specifies the IP address to use for the ConsoleIP installation value.",
       "defaultValue": "192.168.0.10"
+   },
+    "ATAadmin": {
+      "type": "string",
+      "displayName": "Account to add to ATA Administrator's Group.",
+      "description": "User to add to Microsoft Advanced Threat Analytics Administrators group.",
+      "defaultValue": "jeff@corp.jeffgilb.com"
    }
+   
    },
   "runCommand": {
-    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./InstallATA.ps1 -CenterIpAddress ''', parameters('CenterIpAddress'), ''' -CenterPort ''', parameters('CenterPort'), ''' -ConsoleIP ''', parameters('ConsoleIP'), '''')]"
+    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./InstallATA.ps1 -CenterIpAddress ''', parameters('CenterIpAddress'), ''' -CenterPort ''', parameters('CenterPort'), ''' -ConsoleIP ''', parameters('ConsoleIP'), ''' -ATAadmin ''', parameters('ATAadmin'), '''')]"
    }
   }

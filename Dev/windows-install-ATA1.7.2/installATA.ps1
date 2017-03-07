@@ -4,7 +4,9 @@ param(
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
 	  [string] $CenterPort,
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [string] $ConsoleIP
+	  [string] $ConsoleIP,
+      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
+	  [string] $ATAadmin
 )
 
 ###################################################################################################
@@ -50,7 +52,12 @@ try
 {
 # Install Microsoft ATA Center: ATA 1.7.2
 C:\Packages\"Microsoft ATA Center Setup.exe" /q --LicenseAccepted NetFrameworkCommandLineArguments="/q" CenterIpAddress=$CenterIpAddress CenterPort=$CenterPort ConsoleIpAddress=$ConsoleIP
-write-host "Microsoft ATA Center Setup"
+write-host "Completed Microsoft ATA Center Setup."
+
+# Add user to Microsoft Advanced Threat Analytics Administrators group.
+$DomainGroup = “Microsoft Advanced Threat Analytics Administrators"
+Add-ADGroupMember -Identity $DomainGroup -Members $ATAadmin
+
 }
 finally
 {
