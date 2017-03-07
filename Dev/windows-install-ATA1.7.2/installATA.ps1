@@ -51,7 +51,7 @@ trap
 try
 {
     $Path = "C:\Packages\Microsoft ATA Center Setup.exe"
-    $Uri = https://adevtestlabdev1569.blob.core.windows.net/files/Microsoft%20ATA%20Center%20Setup.exe
+    $Uri = "https://adevtestlabdev1569.blob.core.windows.net/files/Microsoft%20ATA%20Center%20Setup.exe"
     $TimeoutSec = 30
 
    # Ensure the path is available.
@@ -63,7 +63,7 @@ try
     New-Item -ItemType Directory -Force -Path (Split-Path -parent $Path) | Out-Null
 
    # Download requested file.
- 	Write-Host "Downloading file from $Uri"
+ 	Write-Host "Downloading file from " + $Uri
 	Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 	Write-Host "Downloaded ATA bits."
 
