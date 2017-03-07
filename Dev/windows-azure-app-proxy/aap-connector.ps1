@@ -59,17 +59,21 @@ trap
 try
 {
     # Install Azure AD Application Proxy Connector
-	AADApplicationProxyConnectorInstaller.exe REGISTERCONNECTOR="false" /q
+	.\AADApplicationProxyConnectorInstaller.exe REGISTERCONNECTOR="false" /q
+	write-host "Installed Azure application proxy connector."
 
     # Get Azure AD tenant global admin credentials
+	#$User = "jeff@jeffgilb.com"
+	$SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
 	$cred = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $User, $Password
+	write-host "Trying $user to connect to Azure AD."
     
-    # Give the install a minute to complete
-	start-sleep 60
+    # Give the install a pause to complete
+	start-sleep 30
 
     # Register Azure AD Application Proxy Connector
-	"C:\Program Files\Microsoft AAD App Proxy Connector\RegisterConnector.ps1 -modulePath C:\Program Files\Microsoft AAD App Proxy Connector\Modules\" -moduleName "AppProxyPSModule" -Authenticationmode Credentials -Usercredentials $cred
-
+	C:\"Program Files\Microsoft AAD App Proxy Connector"\RegisterConnector.ps1 -modulePath C:\"Program Files\Microsoft AAD App Proxy Connector"\Modules\ -moduleName AppProxyPSModule -Authenticationmode Credentials -Usercredentials $cred
+	write-host "Registerd Azure AD Application Proxy Connector." 
 }
 finally
 {
