@@ -14,7 +14,7 @@ param(
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
 	  [string] $User,
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [securestring] $Password
+	  [string] $Password
 )
 
 ###################################################################################################
@@ -64,7 +64,7 @@ try
 
     # Get Azure AD tenant global admin credentials
 	#$User = "jeff@jeffgilb.com"
-	$SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
+	#$SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
 	$cred = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $User, $Password
 	write-host "Trying $user to connect to Azure AD."
     
