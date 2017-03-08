@@ -16,7 +16,7 @@
       "defaultValue": "jeff@jeffgilb.com"
     },
     "Password": {
-      "type": "securestring",
+      "type": "string",
       "displayName": "Global admin password.",
       "description": "Azure AD tenant global administrator password.",
       "defaultValue": "mypassword"
