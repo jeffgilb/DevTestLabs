@@ -14,7 +14,7 @@ param(
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
 	  [string] $User,
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [string] $Password
+	  [securestring] $Password
 )
 
 ###################################################################################################
