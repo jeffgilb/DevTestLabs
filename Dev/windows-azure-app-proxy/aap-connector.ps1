@@ -60,6 +60,9 @@ try
 {
     # Install Azure AD Application Proxy Connector
 	.\AADApplicationProxyConnectorInstaller.exe REGISTERCONNECTOR="false" /q
+	
+    # Give the install a pause to complete and settle down
+	start-sleep 30
 	write-host "Installed Azure application proxy connector."
 
     # Get Azure AD tenant global admin credentials
@@ -67,9 +70,6 @@ try
 	$cred = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $User, $SecurePassword
 	#$cred = New-Object System.Management.Automation.PSCredential ($User,$SecurePassword)
 	write-host "Trying $User to connect to Azure AD."
- 
-# Give the install a pause to complete
-	start-sleep 30
 
     # Register Azure AD Application Proxy Connector
 	C:\"Program Files\Microsoft AAD App Proxy Connector"\RegisterConnector.ps1 -modulePath C:\"Program Files\Microsoft AAD App Proxy Connector"\Modules\ -moduleName AppProxyPSModule -Authenticationmode Credentials -Usercredentials $cred
