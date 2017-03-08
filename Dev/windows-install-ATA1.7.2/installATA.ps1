@@ -77,6 +77,15 @@ try
 	$DomainGroup = “Microsoft Advanced Threat Analytics Administrators"
 	Add-ADGroupMember -Identity $DomainGroup -Members $ATAadmin
 	write-host "Added $ATAadmin to Microsoft Advanced Threat Analytics Administrators group."
+
+    # Add CNAME for ATA to DNS (this must be run on the server running DNS)
+	$fzone = Get-ComputerInfo | select -ExpandProperty CsDomain
+    	$hostname = Get-ComputerInfo | select -ExpandProperty CsDNSHostName
+    	$server = "$hostname.$fzone"
+
+	new-dnsrecord -server $server -fzone $fzone -computer $server -alias "ata.$fzone" -cname
+	write-host "Added CNAME record for ata.$fzone to point to $server."
+
 }
 finally
 {
