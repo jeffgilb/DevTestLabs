@@ -19,7 +19,7 @@
       "type": "securestring",
       "displayName": "Global admin password.",
       "description": "Azure AD tenant global administrator password.",
-      "defaultValue": "mypassword"
+      "defaultValue": ""
     }
       },
   "runCommand": {
