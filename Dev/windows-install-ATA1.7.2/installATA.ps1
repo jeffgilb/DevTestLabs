@@ -84,7 +84,7 @@ try
 	$computer="$dc.$fqdn"
 
 	Add-DnsServerResourceRecordCName -Name ata -HostNameAlias $computer -ZoneName $fqdn
-	write-host "Added CNAME record for $computer to point to ata.$fqdn."
+	write-host "Added CNAME record for ata.$fqdn to point to $computer."
 
 }
 finally
