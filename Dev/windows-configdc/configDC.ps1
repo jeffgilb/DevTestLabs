@@ -67,6 +67,12 @@ try
 	Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
 	Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
 
+    # Enable downloads from Internet Explorer
+ 	$HKLM = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+	$HKCU = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3"
+	Set-ItemProperty -Path $HKLM -Name "1803" -Value 0
+	Set-ItemProperty -Path $HKCU -Name "1803" -Value 0
+
     # Install Active Directory Users and Computers
 	Import-Module ServerManager
 	Add-WindowsFeature RSAT-ADDS-Tools
