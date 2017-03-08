@@ -83,7 +83,7 @@ try
     	$hostname = Get-ComputerInfo | select -ExpandProperty CsDNSHostName
     	$server = "$hostname.$fzone"
 
-	new-dnsrecord -server $server -fzone $fzone -computer $server -alias "ata.$fzone" -cname
+	. .\new-dnsrecord -server $server -fzone $fzone -computer $server -alias "ata.$fzone" -cname
 	write-host "Added CNAME record for ata.$fzone to point to $server."
 
 }
