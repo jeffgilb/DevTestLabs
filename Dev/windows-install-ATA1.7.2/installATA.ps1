@@ -71,20 +71,20 @@ try
 	write-host "Completed Microsoft ATA Center Setup."
     
    # Give ATA Setup time to complete
-	Start-Sleep -s 120
+	Start-Sleep -s 60
 
    # Add user to Microsoft Advanced Threat Analytics Administrators group.
 	$DomainGroup = “Microsoft Advanced Threat Analytics Administrators"
 	Add-ADGroupMember -Identity $DomainGroup -Members $ATAadmin
 	write-host "Added $ATAadmin to Microsoft Advanced Threat Analytics Administrators group."
 
-    # Add CNAME for ATA to DNS (this must be run on the server running DNS)
-	$fzone = Get-ComputerInfo | select -ExpandProperty CsDomain
-    	$hostname = Get-ComputerInfo | select -ExpandProperty CsDNSHostName
-    	$server = "$hostname.$fzone"
+   # Get computer and domain name information
+	$dc=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Name
+	$fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
+	$computer="$dc.$fqdn"
 
-	. .\new-dnsrecord -server $server -fzone $fzone -computer $server -alias "ata.$fzone" -cname
-	write-host "Added CNAME record for ata.$fzone to point to $server."
+	Add-DnsServerResourceRecordCName -Name ata -HostNameAlias $computer -ZoneName $fqdn
+	write-host "Added CNAME record for $computer to point to ata.$fqdn."
 
 }
 finally
