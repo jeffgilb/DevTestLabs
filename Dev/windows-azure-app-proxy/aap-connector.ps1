@@ -59,25 +59,15 @@ trap
 try
 {
     # Install Azure AD Application Proxy Connector
-	#.\AADApplicationProxyConnectorInstaller.exe REGISTERCONNECTOR="false" /q
+	.\AADApplicationProxyConnectorInstaller.exe REGISTERCONNECTOR="false" /q
 	write-host "Installed Azure application proxy connector."
 
     # Get Azure AD tenant global admin credentials
-	
-	$SecurePassword = $Password|ConvertTo-SecureString -AsPlainText -Force
-	$cred = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $User, $Password
-	#$cred = New-Object System.Management.Automation.PSCredential ($user,$password)
-	write-host "Trying $user to connect to Azure AD."
-    
-
- $SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
- $cred = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $User, $SecurePassword
-
-
-$password=$pass|ConvertTo-SecureString -AsPlainText -Force
-$Cred = New-Object System.Management.Automation.PsCredential("$uname@domain.tld",$password)
-
-
+	$SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
+	$cred = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $User, $SecurePassword
+	#$cred = New-Object System.Management.Automation.PSCredential ($User,$SecurePassword)
+	write-host "Trying $User to connect to Azure AD."
+ 
 # Give the install a pause to complete
 	start-sleep 30
 
