@@ -70,7 +70,18 @@ try
     Write-Host "Downloading file from $Uri"
     Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 
-    # "MSIEXEC /i C:\Packages\AzureADConnect.msi /passive ALLUSERS=1"
+    param(
+      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
+	  [String] $user,
+      [Parameter(valueFromPipeline=$true)]
+	  [String] $password
+      )
+
+    $secPassword = ConvertTo-SecureString -String $password -AsPlainText -Force
+    $credential = New-Object System.Management.Automation.PSCredential($user,$secPassword)
+    $command = "MSIEXEC /i C:\Packages\AzureADConnect.msi /passive ALLUSERS=1"
+    # Invoke-Command -ComputerName $env:COMPUTERNAME -Credential $credential -FilePath $command -ArgumentList $PackageList
+    Invoke-Command -Credential $credential -FilePath $command -ArgumentList
 }
 
 finally
