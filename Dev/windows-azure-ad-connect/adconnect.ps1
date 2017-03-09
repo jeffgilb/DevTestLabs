@@ -59,11 +59,12 @@ try
     New-Item -ItemType Directory -Force -Path (Split-Path -parent $Path) | Out-Null
 
     # Download requested file.
-    Write-Host "Downloading file from $Uri"
+    Write-Host "Downloading file from $Uri to C:\Packages\."
     Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 
     # Kick off the install for all users.
     C:\Packages\AzureADConnect.msi /passive ALLUSERS=1
+    Write-Host "Successfully installed Azure AD Connect."
 
 <#
 More inforamtion: https://docs.microsoft.com/azure/active-directory/connect/active-directory-aadconnect
