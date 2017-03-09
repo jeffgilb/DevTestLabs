@@ -3,26 +3,13 @@
     "title": "Install Azure AD Connect",
     "publisher": "JeffGilb",
     "description": "Downloads Azure AD Connect to 'C:Packages'.",
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/windows-azure-app-proxy/Azure.PNG",
     "tags": [
         "Windows"
     ],
     "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
     "targetOsType": "Windows",
-      "parameters": {
-    "user": {
-      "type": "string",
-      "displayName": "User Name",
-      "description": "Account to use to install AAD Connect.",
-      "allowEmpty": false
-     },
-    "password": {
-      "type": "securestring",
-      "displayName": "User password.",
-      "description": "Password to use.",
-      "allowEmpty": false
-      }
-    },  
     "runCommand": {
-        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./adconnect.ps1 -user ''', parameters('user'), ''' -password ''', parameters('password'), '''')]"
+        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./adconnect.ps1')]"
     }
 }
