@@ -8,7 +8,6 @@
     "tags": [
       "IPCONFIG"
   ],
-
   "runCommand": {
     "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./ipconfig.ps1')]"
   }
