@@ -7,7 +7,6 @@
     "tags": [
         "Windows"
     ],
-    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
     "targetOsType": "Windows",
     "runCommand": {
         "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./adconnect.ps1')]"
