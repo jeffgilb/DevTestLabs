@@ -1,10 +1,3 @@
-param(
-      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [String] $user,
-      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [String] $password
-)
-
 ###################################################################################################
 # PowerShell configurations
 #
@@ -53,14 +46,6 @@ trap
 # Main execution block.
 try
 {
-# More inforamtion: https://docs.microsoft.com/en-us/azure/active-directory/connect/active-directory-aadconnect
-# The following is a list of components that Azure AD Connect installs on the server where Azure AD Connect is installed. This list is for a basic Express installation. If you choose to use a different SQL Server on the Install synchronization services page, then SQL Express LocalDB is not installed locally.+  
-# • Azure AD Connect Health
-# • Microsoft Online Services Sign-In Assistant for IT Professionals (installed but no dependency on it)
-# • Microsoft SQL Server 2012 Command Line Utilities
-# • Microsoft SQL Server 2012 Express LocalDB
-# • Microsoft SQL Server 2012 Native Client
-# • Microsoft Visual C++ 2013 Redistribution Package
 
     $Uri="https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
     $Path="C:\Packages\AzureADConnect.msi"
@@ -77,8 +62,20 @@ try
     Write-Host "Downloading file from $Uri"
     Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 
-    # If someone is logged into the VM they will see the installation wizard. Otherwise, you have to kick off the install manually.
+    # Kick off the install for all users.
     C:\Packages\AzureADConnect.msi /passive ALLUSERS=1
+
+<#
+More inforamtion: https://docs.microsoft.com/azure/active-directory/connect/active-directory-aadconnect
+
+The following is a list of components that Azure AD Connect installs on the server where Azure AD Connect is installed. This list is for a basic Express installation. If you choose to use a different SQL Server on the Install synchronization services page, then SQL Express LocalDB is not installed locally.+  
+ • Azure AD Connect Health
+ • Microsoft Online Services Sign-In Assistant for IT Professionals (installed but no dependency on it)
+ • Microsoft SQL Server 2012 Command Line Utilities
+ • Microsoft SQL Server 2012 Express LocalDB
+ • Microsoft SQL Server 2012 Native Client
+ • Microsoft Visual C++ 2013 Redistribution Package
+#>
 }
 
 finally
