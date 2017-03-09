@@ -1,7 +1,7 @@
 param(
       [Parameter(Mandatory = $true,valueFromPipeline=$true)]
 	  [String] $user,
-      [Parameter(valueFromPipeline=$true)]
+      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
 	  [String] $password
 )
 
@@ -77,11 +77,8 @@ try
     Write-Host "Downloading file from $Uri"
     Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 
-    $secPassword = ConvertTo-SecureString -String $password -AsPlainText -Force
-    $credential = New-Object System.Management.Automation.PSCredential($user,$secPassword)
-    $command = "MSIEXEC /i C:\Packages\AzureADConnect.msi /passive ALLUSERS=1"
-    # Invoke-Command -ComputerName $env:COMPUTERNAME -Credential $credential -FilePath $command -ArgumentList $PackageList
-    Invoke-Command -Credential $credential -FilePath $command -ArgumentList
+    # If someone is logged into the VM they will see the installation wizard. Otherwise, you have to kick off the install manually.
+    C:\Packages\AzureADConnect.msi /passive ALLUSERS=1
 }
 
 finally
