@@ -1,3 +1,10 @@
+param(
+      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
+	  [String] $user,
+      [Parameter(valueFromPipeline=$true)]
+	  [String] $password
+)
+
 ###################################################################################################
 # PowerShell configurations
 #
@@ -69,13 +76,6 @@ try
     # Download requested file.
     Write-Host "Downloading file from $Uri"
     Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
-
-    param(
-      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
-	  [String] $user,
-      [Parameter(valueFromPipeline=$true)]
-	  [String] $password
-      )
 
     $secPassword = ConvertTo-SecureString -String $password -AsPlainText -Force
     $credential = New-Object System.Management.Automation.PSCredential($user,$secPassword)
