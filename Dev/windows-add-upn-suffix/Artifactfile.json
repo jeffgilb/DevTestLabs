@@ -1,0 +1,21 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+    "title": "Add an alternate UPN suffix.",
+    "publisher": "JeffGilb",
+    "description": "Adds an alternate UPN suffix to Active Directory Domains and Trusts and then assigns it to all users. Use this in preparation for synchronizing users to Azure AD.",
+    "tags": [
+        "Windows"
+    ],
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+    "targetOsType": "Windows",
+    "parameters": {
+     "upnSuffix": {
+       "type": "string",
+       "displayName": "Alternate UPN suffix to add.",
+       "description": "This parameter sets the UPN suffix property for all Active Directory user account object."
+      }
+    },
+    "runCommand": {
+        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./addSuffix.ps1 -upnSuffix '''')]"
+    }
+}
