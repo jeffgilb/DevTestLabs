@@ -12,7 +12,7 @@
      "upnSuffix": {
        "type": "string",
        "displayName": "Alternate UPN suffix to add.",
-       "description": "This parameter sets the UPN suffix property for all Active Directory user account object."
+       "description": "This parameter sets the UPN suffix property for all Active Directory user account objects."
       }
     },
     "runCommand": {
