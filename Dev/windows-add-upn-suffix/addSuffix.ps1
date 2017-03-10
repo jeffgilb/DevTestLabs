@@ -66,7 +66,6 @@ try
 	Import-Module ActiveDirectory 
 	$LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
 	$fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
-	$upnSuffix = "test2.suffix"
 
     # Add alternative upn suffix to domain 
 	Set-ADForest -Identity $fqdn -UPNSuffixes @{Add=$upnSuffix}
