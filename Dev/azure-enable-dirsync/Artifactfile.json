@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
+  "title": "Activate Azure AD directory synchronization.",
+  "description": "Activates Azure AD directory synchronization to prepare for running Azure AD Connect.",
+  "publisher": "JeffGilb",
+  "tags": [
+    "Azure AD"
+  ],
+  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/azure-enable-dirsync/Azure.PNG",
+  "targetOsType": "Windows",
+  "parameters": {
+    "User": {
+      "type": "string",
+      "displayName": "Azure AD administrator name.",
+      "description": "Specifies the name of Azure AD admin account to use to enable directory synchronization.",
+      "allowEmpty": false
+    },
+    "Password": {
+      "type": "securestring",
+      "displayName": "Azure AD administrator password.",
+      "description": "Specifies the password for the Azure AD admin account to use to enable directory synchronization.",
+      "allowEmpty": false
+    }
+  },
+  "runCommand": {
+    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./enable-dirsync.ps1 -User ''', parameters('User'), ''' -Password ''', parameters('Password'), '''')]"
+  }
+}
