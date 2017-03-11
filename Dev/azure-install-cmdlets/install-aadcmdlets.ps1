@@ -90,10 +90,10 @@ try
     Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
 
    # Kick off the installs for all users.
-    C:\Packages\AdministrationConfig-en.msi /passive ALLUSERS=1
+    C:\Packages\AdministrationConfig-en.msi /qb
     Write-Host "Successfully installed Microsoft Online Services Sign-In Assistant."
     
-    C:\Packages\AdministrationConfig-en.msi /passive ALLUSERS=1
+    C:\Packages\AdministrationConfig-en.msi /qb
     Write-Host "Successfully installed Azure AD PowerShell cmdlets."
 }
 finally
