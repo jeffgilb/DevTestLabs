@@ -67,13 +67,14 @@ try
 
     # Get Azure AD tenant global admin credentials
 	$SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
-	$cred = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $User, $SecurePassword
-	#$cred = New-Object System.Management.Automation.PSCredential ($User,$SecurePassword)
+	$msolcred = New-Object –TypeName System.Management.Automation.PSCredential ($User,$SecurePassword)
+	connect-msolservice -credential $msolcred
 	write-host "Trying $User to connect to Azure AD."
+	connect-msolservice -credential $msolcred
 
     # Register Azure AD Application Proxy Connector
 	C:\"Program Files\Microsoft AAD App Proxy Connector"\RegisterConnector.ps1 -modulePath C:\"Program Files\Microsoft AAD App Proxy Connector"\Modules\ -moduleName AppProxyPSModule -Authenticationmode Credentials -Usercredentials $cred
-	write-host "Registerd Azure AD Application Proxy Connector." 
+	write-host "Registered Azure AD Application Proxy Connector." 
 }
 finally
 {
