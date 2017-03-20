@@ -74,7 +74,7 @@ try
 
     # Register Azure AD Application Proxy Connector
 	C:\"Program Files\Microsoft AAD App Proxy Connector"\RegisterConnector.ps1 -modulePath C:\"Program Files\Microsoft AAD App Proxy Connector"\Modules\ -moduleName AppProxyPSModule -Authenticationmode Credentials -Usercredentials $cred
-	write-host "Registerd Azure AD Application Proxy Connector." 
+	write-host "Registered Azure AD Application Proxy Connector." 
 }
 finally
 {
