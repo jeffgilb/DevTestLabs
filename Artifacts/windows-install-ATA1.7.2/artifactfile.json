@@ -3,7 +3,7 @@
   "title": "Install ATA",
   "publisher": "JeffGilb",
   "description": "Installs ATA 1.7.2.",
-  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-install-ATA1.7.2/jeff.png",
   "targetOsType": "Windows",
     "tags": [
       "ATA"
