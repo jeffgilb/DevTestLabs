@@ -6,7 +6,7 @@
     "tags": [
         "Windows"
     ],
-    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-populateadds/jeff.png",
     "targetOsType": "Windows",
     "runCommand": {
         "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./populateadds.ps1')]"

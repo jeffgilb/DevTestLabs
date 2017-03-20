@@ -3,7 +3,7 @@
   "title": "Insert Pause",
   "publisher": "JeffGilb",
   "description": "Inserts a pause between steps.",
-  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-pause/jeff.png",
   "targetOsType": "Windows",
     "tags": [
       "Pause"

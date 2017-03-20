@@ -3,7 +3,7 @@
     "title": "Install Azure AD Connect",
     "publisher": "JeffGilb",
     "description": "Downloads and installs the latest version of Azure AD Connect.",
-    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Artifacts/windows-azure-ad-connect/Azure.PNG",
+    "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-azure-ad-connect/azure.PNG",
     "tags": [
         "Windows"
     ],

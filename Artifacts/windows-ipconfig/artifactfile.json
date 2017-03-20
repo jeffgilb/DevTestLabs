@@ -3,7 +3,7 @@
   "title": "IPCONFIG Information",
   "publisher": "JeffGilb",
   "description": "Returns IPCONFIG inforamtion.",
-  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/jeff.png",
+  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-ipconfig/jeff.png",
   "targetOsType": "Windows",
     "tags": [
       "IPCONFIG"
