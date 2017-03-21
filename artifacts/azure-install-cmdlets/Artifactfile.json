@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
   "title": "Install Azure AD PowerShell cmdlets.",
-  "description": "Downloads and installs Microsoft Online Services Sign-In Assistant and Azure AD PowerShell cmdlets.",
+  "description": "Installs the Microsoft Online Services Sign-In Assistant for IT Professionals RTW from http://go.microsoft.com/fwlink/?LinkID=286152 and then installs Azure AD PowerShell cmdlets from http://go.microsoft.com/fwlink/p/?linkid=236297.",
   "publisher": "JeffGilb",
   "tags": [
     "Azure AD"
