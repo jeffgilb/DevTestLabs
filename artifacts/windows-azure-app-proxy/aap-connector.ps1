@@ -67,8 +67,8 @@ try
 
     # Get Azure AD tenant global admin credentials
 	$SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
-	$cred = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $User, $SecurePassword
-	#$cred = New-Object System.Management.Automation.PSCredential ($User,$SecurePassword)
+	#$cred = New-Object –TypeName System.Management.Automation.PSCredential –ArgumentList $User, $SecurePassword
+	$cred = New-Object System.Management.Automation.PSCredential ($User,$SecurePassword)
 	write-host "Trying $User to connect to Azure AD."
 
     # Register Azure AD Application Proxy Connector

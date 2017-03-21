@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2015-01-01/dtlArtifacts.json",
+  "title": "Enable directory integration in Azure AD",
+  "publisher": "JeffGilb",
+  "description": "Uses global admin credentials to enable directory sync integration in Azure AD in preparation for running Azure AD Connect.",
+  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/azure-enable-directory-sync/azure.png",
+  "targetOsType": "Windows",
+    "tags": [
+      "Azure"
+  ],
+  "parameters": {
+    "User": {
+      "type": "string",
+      "displayName": "Global admin name.",
+      "description": "Azure AD tenant global administrator name.",
+      "defaultValue": ""
+    },
+    "Password": {
+      "type": "securestring",
+      "displayName": "Global admin password.",
+      "description": "Azure AD tenant global administrator password.",
+      "defaultValue": ""
+    }
+      },
+  "runCommand": {
+    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./enableSync.ps1 -User ''', parameters('User'), ''' -Password ''', parameters('Password'), '''')]"
+   }
+  }
