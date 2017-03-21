@@ -1,20 +1,20 @@
+ï»¿param(
+      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
+	  [string] $User,
+      [Parameter(Mandatory = $true,valueFromPipeline=$true)]
+	  [string] $Password
+)
+
 ###################################################################################################
 # PowerShell configurations
-#
-
 # NOTE: Because the $ErrorActionPreference is "Stop", this script will stop on first failure.
 #       This is necessary to ensure we capture errors inside the try-catch-finally block.
 $ErrorActionPreference = "Stop"
 
 # Ensure we set the working directory to that of the script.
 pushd $PSScriptRoot
-
 ###################################################################################################
-
-#
 # Functions used in this script.
-#
-
 function Handle-LastError
 {
     [CmdletBinding()]
@@ -35,7 +35,6 @@ function Handle-LastError
 }
 ###################################################################################################
 # Handle all errors in this script.
-#
 trap
 {
     # NOTE: This trap will handle all errors. There should be no need to use a catch below in this
@@ -44,41 +43,19 @@ trap
 }
 ###################################################################################################
 # Main execution block.
+
 try
-{
-
-    $Uri="https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
-    $Path="C:\Packages\AzureADConnect.msi"
-    $TimeoutSec=30
-    # Ensure the path is available.
-    if (-not [System.IO.Path]::IsPathRooted($Path))
-    {
-        $Path = Join-Path $Env:Temp $Path
-    }
-    Write-Host "Ensuring local path $Path"
-    New-Item -ItemType Directory -Force -Path (Split-Path -parent $Path) | Out-Null
-
-    # Download requested file.
-    Write-Host "Downloading file from $Uri to C:\Packages\."
-    Invoke-WebRequest -Uri $Uri -OutFile $Path -TimeoutSec $TimeoutSec
-
-    # Kick off the install for all users.
-    C:\Packages\AzureADConnect.msi /passive ALLUSERS=1
-    Write-Host "Successfully installed Azure AD Connect."
-
-<#
-More information: https://docs.microsoft.com/azure/active-directory/connect/active-directory-aadconnect
-
-The following is a list of components that Azure AD Connect installs on the server where Azure AD Connect is installed. This list is for a basic Express installation. If you choose to use a different SQL Server on the Install synchronization services page, then SQL Express LocalDB is not installed locally.+  
- • Azure AD Connect Health
- • Microsoft Online Services Sign-In Assistant for IT Professionals (installed but no dependency on it)
- • Microsoft SQL Server 2012 Command Line Utilities
- • Microsoft SQL Server 2012 Express LocalDB
- • Microsoft SQL Server 2012 Native Client
- • Microsoft Visual C++ 2013 Redistribution Package
-#>
+{	
+    # Authenticate to Azure AD as global admin
+	$SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
+	$msolcred = New-Object â€“TypeName System.Management.Automation.PSCredential ($User,$SecurePassword)
+	connect-msolservice -credential $msolcred
+	write-host "Trying $User to connect to Azure AD."
+	connect-msolservice -credential $msolcred
+    
+    # Enable directory sync
+	Set-MsolDirSyncEnabled â€“EnableDirSync $true -Force
 }
-
 finally
 {
     popd
