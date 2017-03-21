@@ -6,7 +6,7 @@
   "tags": [
     "Azure AD"
   ],
-  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/Dev/azure-install-cmdlets/Azure.PNG",
+  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/azure-install-cmdlets/Azure.PNG",
   "targetOsType": "Windows",
   "runCommand": {
     "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./install-aadcmdlets.ps1')]"
