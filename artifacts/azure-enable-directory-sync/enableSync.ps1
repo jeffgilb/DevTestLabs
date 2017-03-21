@@ -50,12 +50,11 @@ try
 	$SecurePassword = $Password | ConvertTo-SecureString -AsPlainText -Force
 	$msolcred = New-Object –TypeName System.Management.Automation.PSCredential ($User,$SecurePassword)
 	connect-msolservice -credential $msolcred
-	connect-msolservice -credential $msolcred
-    write-host "Connected to Azure AD as $User."
+    	write-host "Connected to Azure AD as $User."
 
     # Enable directory sync
 	Set-MsolDirSyncEnabled –EnableDirSync $true -Force
-    write-host "Directory integration enabled!"
+    	write-host "Directory integration enabled!"
 
 }
 finally
