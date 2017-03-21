@@ -3,7 +3,7 @@
   "title": "Enable directory integration in Azure AD",
   "publisher": "JeffGilb",
   "description": "Uses global admin credentials to enable directory sync integration in Azure AD in preparation for running Azure AD Connect.",
-  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/dev/artifacts/azure-enable-directory-sync/azure.png",
+  "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/azure-enable-directory-sync/azure.png",
   "targetOsType": "Windows",
     "tags": [
       "Azure"
