@@ -1,14 +1,21 @@
 {
     "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
-    "title": "Configure Lab DC - All",
+    "title": "Configure a new base DC",
     "publisher": "JeffGilb",
-    "description": "Does all the stuff (Requires Sysinternals artifact)",
+    "description": "Completely configures a base lab domain controller (**requires domain setup and Sysinternals artifacts to be installed first**). Turns off IE Enhanced Security Configuration, sets Bginfo to autostart, installs AD DS administrator tools, creates an OU structure and populates it with 1,000 ficticious users and groups, adds the specified alternate UPN suffix to users and sets it as their email address. Fictitious names courtesy of fakenamegenerator.com and licensed under a Creative Commons Attribution-Share Alike 3.0 United States License: http://creativecommons.org/licenses/by-sa/3.0/us/",
     "tags": [
         "Windows"
     ],
     "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-configdc-all/jeff.png",
     "targetOsType": "Windows",
+        "parameters": {
+     "upnSuffix": {
+       "type": "string",
+       "displayName": "Alternate UPN suffix to add.",
+       "description": "This parameter is used for the alternate UPN suffix and email properties for all Active Directory user account objects."
+      }
+    },
     "runCommand": {
-        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./configDC.ps1')]"
+        "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./configDC.ps1 -upnSuffix ''', parameters('upnSuffix'), '''')]"
     }
 }

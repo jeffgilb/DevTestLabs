@@ -1,13 +1,8 @@
-﻿param(
-      [Parameter(valueFromPipeline=$true)]
-	  [String] $upnSuffix
-)
-###################################################################################################
+﻿###################################################################################################
 # PowerShell configurations
-# NOTE: Because the $ErrorActionPreference is "Stop", this script will stop on first failure.
+# NOTE: Because the $ErrorActionPreference is "Continue", this script will continue on failure.
 #       This is necessary to ensure we capture errors inside the try-catch-finally block.
-$ErrorActionPreference = "Stop"
-
+$ErrorActionPreference = "Continue"
 # Ensure we set the working directory to that of the script.
 pushd $PSScriptRoot
 
@@ -32,6 +27,7 @@ function Handle-LastError
     exit -0
 }
 
+# I was getting a weird error about Azure AD Web Service not running so now I check for it
 function FuncCheckService
 {
     param($ServiceName)
@@ -54,27 +50,8 @@ trap
 # Main execution block.
 try
 {
-# Turn off IE Enhanced Security Configuration
-$AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
-$UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
-Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
-Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
-write-host "Turned off IE enhanced security configuration."
 
-#Copy Bginfo config file to sysinternals directory & place shortcut in StartUp folder
-Copy-Item .\Bginfo.bgi "C:\ProgramData\chocolatey\lib\sysinternals\tools\Bginfo.bgi"
-Copy-Item .\Bginfo.lnk "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
-write-host "Set up Bginfo to run at startup."
-
-# Install Active Directory Users and Computers
-Import-Module ServerManager
-Add-WindowsFeature RSAT-ADDS-Tools
-write-host "Installed ADUC snap-in."
- 
 FuncCheckService -ServiceName ADWS
-
-Start-Sleep -s 300
-write-host "Paused for 5 minutes to allow services to settle."
 
 # Create OU structure and populate with ficticious users       
 
@@ -344,27 +321,6 @@ foreach ($User in $Users)
 } 
 write-host "$BusUnit OU, users, and group created and populated." 
 
-# Add alternate UPN suffix to users and set as their email address
-    # Set parameters
-	Import-Module ActiveDirectory 
-	$LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
-	$fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
-
-    # Add alternative upn suffix to domain 
-	Set-ADForest -Identity $fqdn -UPNSuffixes @{Add=$upnSuffix}
-
-    # Add alternative upn suffix to users
-	$users = Get-ADUser -Filter {UserPrincipalName -like '*'} -SearchBase $LDAPpath
-	foreach ($user in $users) { 
-	    $userName = $user.UserPrincipalName.Split('@')[0] 
-	    $UPN = $userName + "@" + $upnSuffix 
-	    $user | Set-ADUser -UserPrincipalName $UPN
-            $user | Set-ADUser -EmailAddress $UPN
-            Write-Host $user.Name" set to "$UPN 
-    }
-
-
-write-host "Basic DC configuration complete."
 
 }
 finally
