@@ -1,11 +1,11 @@
 ﻿###################################################################################################
 # PowerShell configurations
-# NOTE: Because the $ErrorActionPreference is "Continue", this script will continue on failure.
+# NOTE: Because the $ErrorActionPreference is "Stop", this script will stop on first failure.
 #       This is necessary to ensure we capture errors inside the try-catch-finally block.
-$ErrorActionPreference = "Continue"
+$ErrorActionPreference = "Stop"
+
 # Ensure we set the working directory to that of the script.
 pushd $PSScriptRoot
-
 ###################################################################################################
 # Functions used in this script.
 function Handle-LastError
@@ -27,7 +27,7 @@ function Handle-LastError
     exit -0
 }
 
-# I was getting a weird error about Azure AD Web Service not running so now I check for it
+# Was getting a weird error about Azure AD Web Service not running so now I check for it
 function FuncCheckService
 {
     param($ServiceName)
@@ -54,10 +54,6 @@ try
 FuncCheckService -ServiceName ADWS
 
 # Create OU structure and populate with ficticious users       
-
-# Create OU for demo VMs to join
-New-ADOrganizationalUnit -Name "Demo VMs" -Description "Demo Virtual Machines" -PassThru
-
 # Get distinguished name of local domain (i.e. DC=corp,DC=jeffgilb,DC=com)
 $LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName    
 
