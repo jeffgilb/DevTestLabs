@@ -81,12 +81,9 @@ try
 	Set-ItemProperty -Path $SystemKey -Name "1803" -Value 0
 	Set-ItemProperty -Path $UserKey -Name "1803" -Value 0
 
-    # Give DC time to settle before running next artifact.
-	Start-Sleep -s 300
-
     # Join the specified domain
-	$password = "$password" | ConvertTo-SecureString -asPlainText -Force
-	$credential = New-Object System.Management.Automation.PSCredential($username,$password)
+	$securePassword = "$password" | ConvertTo-SecureString -asPlainText -Force
+	$credential = New-Object System.Management.Automation.PSCredential ($username,$securePassword)
 	Add-Computer -DomainName $domain -Credential $credential
 
     # Restart the VM
