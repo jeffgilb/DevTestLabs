@@ -54,297 +54,300 @@ trap
 # Main execution block.
 try
 {
-# Turn off IE Enhanced Security Configuration
-$AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
-$UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
-Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
-Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
-write-host "Turned off IE enhanced security configuration."
 
-#Copy Bginfo config file to sysinternals directory & place shortcut in StartUp folder
-Copy-Item .\Bginfo.bgi "C:\ProgramData\chocolatey\lib\sysinternals\tools\Bginfo.bgi"
-Copy-Item .\Bginfo.lnk "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
-write-host "Set up Bginfo to run at startup."
+    # Restart the VM just in case someone is running this artifact right after promoting the DC without restarting it
+	restart-computer
 
-# Install Active Directory Users and Computers
-Import-Module ServerManager
-Add-WindowsFeature RSAT-ADDS-Tools
-write-host "Installed ADUC snap-in."
+    # Turn off IE Enhanced Security Configuration
+	$AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+	$UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+	Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
+	Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
+	write-host "Turned off IE enhanced security configuration."
+
+    #Copy Bginfo config file to sysinternals directory & place shortcut in StartUp folder
+	Copy-Item .\Bginfo.bgi "C:\ProgramData\chocolatey\lib\sysinternals\tools\Bginfo.bgi"
+	Copy-Item .\Bginfo.lnk "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp"
+	write-host "Set up Bginfo to run at startup."
+
+    # Install Active Directory Users and Computers
+	Import-Module ServerManager
+	Add-WindowsFeature RSAT-ADDS-Tools
+	write-host "Installed ADUC snap-in."
  
-FuncCheckService -ServiceName ADWS
+    # Check for ADWS service
+	FuncCheckService -ServiceName ADWS
 
-Start-Sleep -s 300
-write-host "Paused for 5 minutes to allow services to settle."
+    # Pause to let things settle
+	Start-Sleep -s 300
+	write-host "Paused for 5 minutes to allow services to settle."
 
-# Create OU structure and populate with ficticious users       
+    # Create OU structure and populate with ficticious users       
 
-# Create OU for demo VMs to join
-New-ADOrganizationalUnit -Name "Demo VMs" -Description "Demo Virtual Machines" -PassThru
+    # Get distinguished name of local domain (i.e. DC=corp,DC=jeffgilb,DC=com)
+	$LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName    
 
-# Get distinguished name of local domain (i.e. DC=corp,DC=jeffgilb,DC=com)
-$LDAPPath = Get-ADDomain | select -ExpandProperty DistinguishedName    
+    # Create the Accounting OU
+	$BusUnit = "Accounting"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from accounting.csv and then put them all in the security group
+	$users = import-csv accounting.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 41"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department 	$Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Accounting OU
-$BusUnit = "Accounting"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from accounting.csv and then put them all in the security group
-$users = import-csv accounting.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 41"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
+    # Create the Customer Service OU
+	$BusUnit = "Customer Service"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from customerService.csv and then put them all in the security group
+	$users = import-csv customerService.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 8"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Customer Service OU
-$BusUnit = "Customer Service"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from customerService.csv and then put them all in the security group
-$users = import-csv customerService.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 8"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
+    # Create the Finance OU
+	$BusUnit = "Finance"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the Business Unit security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from finance.csv and then put them all in the security group
+	$users = import-csv finance.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 33"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Finance OU
-$BusUnit = "Finance"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the Business Unit security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from finance.csv and then put them all in the security group
-$users = import-csv finance.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 33"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
+    # Create the Human Resources OU
+	$BusUnit = "Human Resources"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from humanResources.csv and then put them all in the security group
+	$users = import-csv humanResources.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 42"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Human Resources OU
-$BusUnit = "Human Resources"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from humanResources.csv and then put them all in the security group
-$users = import-csv humanResources.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 42"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
+    # Create the Information Technology OU
+	$BusUnit = "Information Technology"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the Business Unit security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from informationTechnology.csv and then put them all in the security group
+	$users = import-csv informationTechnology.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 7"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Information Technology OU
-$BusUnit = "Information Technology"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the Business Unit security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from informationTechnology.csv and then put them all in the security group
-$users = import-csv informationTechnology.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 7"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
+    # Create the Legal OU
+	$BusUnit = "Legal"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the Business Unit security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from legal.csv and then put them all in the security group
+	$users = import-csv legal.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 44"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Legal OU
-$BusUnit = "Legal"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the Business Unit security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from legal.csv and then put them all in the security group
-$users = import-csv legal.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 44"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
+    # Create the Manufacturing OU
+	$BusUnit = "Manufacturing"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the Business Unit security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from manufacturing.csv and then put them all in the security group
+	$users = import-csv manufacturing.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 25"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Manufacturing OU
-$BusUnit = "Manufacturing"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the Business Unit security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from manufacturing.csv and then put them all in the security group
-$users = import-csv manufacturing.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 25"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
+    # Create the Marketing OU
+	$BusUnit = "Marketing"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the Business Unit security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from marketing.csv and then put them all in the security group
+	$users = import-csv marketing.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 8"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Marketing OU
-$BusUnit = "Marketing"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the Business Unit security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from marketing.csv and then put them all in the security group
-$users = import-csv marketing.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 8"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
+    # Create the Pilot Users OU
+	$BusUnit = "Pilot Users"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the Business Unit security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from pilotUsers.csv and then put them all in the security group
+	$users = import-csv pilotUsers.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 92"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Pilot Users OU
-$BusUnit = "Pilot Users"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the Business Unit security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from pilotUsers.csv and then put them all in the security group
-$users = import-csv pilotUsers.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 92"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
+    # Create the Sales OU
+	$BusUnit = "Sales"
+	New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
+	# Create the Business Unit security group
+	New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
+	# Populate the new OU with users from sales.csv and then put them all in the security group
+	$users = import-csv sales.csv -Delimiter "," -Header Name,FirstName,Password
+	foreach ($User in $Users)
+	{  
+	    $OU = "OU = $BusUnit,$LDAPPath"
+	    $Group = $BusUnit
+	    $Password = $User.password 
+	    $Detailedname = $User.firstname + " " + $User.name 
+	    $UserFirstname = $User.Firstname 
+	    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
+	    $SAM =  $FirstLetterFirstname + $User.name 
+	    $Description = "$BusUnit user"
+	    $Department = $BusUnit
+	    $Mobile = "123-456-7890"
+	    $Telephone = "123-456-7890"
+	    $Office = "Bldg 120"
+	    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
+	    Add-ADGroupMember $Group -Members $Sam -Server localhost
+	} 
+	write-host "$BusUnit OU, users, and group created and populated." 
 
-# Create the Sales OU
-$BusUnit = "Sales"
-New-ADOrganizationalUnit -Name $BusUnit -Description "$BusUnit Users" -PassThru
-# Create the Business Unit security group
-New-ADGroup -Name $BusUnit -GroupScope DomainLocal -DisplayName "$BusUnit Users" -Description "Users from the $BusUnit department." -Path "OU=$BusUnit,$LDAPPath" -PassThru
-# Populate the new OU with users from sales.csv and then put them all in the security group
-$users = import-csv sales.csv -Delimiter "," -Header Name,FirstName,Password
-foreach ($User in $Users)
-{  
-    $OU = "OU = $BusUnit,$LDAPPath"
-    $Group = $BusUnit
-    $Password = $User.password 
-    $Detailedname = $User.firstname + " " + $User.name 
-    $UserFirstname = $User.Firstname 
-    $FirstLetterFirstname = $UserFirstname.substring(0,1) 
-    $SAM =  $FirstLetterFirstname + $User.name 
-    $Description = "$BusUnit user"
-    $Department = $BusUnit
-    $Mobile = "123-456-7890"
-    $Telephone = "123-456-7890"
-    $Office = "Bldg 120"
-    New-ADUser -Name $Detailedname -SamAccountName $SAM -UserPrincipalName $SAM -DisplayName $Detailedname -GivenName $user.firstname -Surname $user.name -Department $Department -Description $Description -Office $Office -mobile $Mobile -OfficePhone $Telephone -AccountPassword (ConvertTo-SecureString $Password -AsPlainText -Force) -Enabled $true -Path $OU  
-    Add-ADGroupMember $Group -Members $Sam -Server localhost
-} 
-write-host "$BusUnit OU, users, and group created and populated." 
-
-# Add alternate UPN suffix to users and set as their email address
+    # Add alternate UPN suffix to users and set as their email address
     # Set parameters
 	Import-Module ActiveDirectory 
 	$LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    

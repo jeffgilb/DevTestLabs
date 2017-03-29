@@ -76,8 +76,8 @@ try
 	Import-Module ServerManager
 	Add-WindowsFeature RSAT-ADDS-Tools
 
-    # Give DC time to settle before running next artifact.
-	Start-Sleep -s 300
+    # Restart the VM
+	restart-computer
 }
 finally
 {
