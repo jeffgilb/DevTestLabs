@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
     "title": "Configure member server VMs",
     "publisher": "JeffGilb",
-    "description": "Performs base configurations on member servers: joins the specified domain, turns off IE advanced security, enables downloads from IE, then creates a custom Startup shortcut for bginfo from Sysinternals (by Mark Russinovich). Uses a custom config file (.bgi) co-located with bginfo.exe. IMPORTANT: This requires that the Sysinternals Artifact has been run first!",
+    "description": "Performs base configurations on member servers: joins the specified domain, turns off IE advanced security, enables downloads from IE, creates a custom Startup shortcut for bginfo from Sysinternals (by Mark Russinovich) using a custom config file (.bgi) co-located with bginfo.exe, and then restarts the VM. IMPORTANT: This requires that the Sysinternals Artifact has been run first!",
     "tags": [
         "Windows"
     ],
@@ -11,17 +11,17 @@
      "domain": {
        "type": "string",
        "displayName": "Domain",
-       "description": "Domain name to join."
+       "description": "Enter the domain name (FQDN) to join."
       },
      "username": {
        "type": "string",
        "displayName": "User Name",
-       "description": "User name to use for domain join."
+       "description": "Provide the user name to use for domain join in the domain\\user format."
       },
      "password": {
        "type": "securestring",
        "displayName": "Password",
-       "description": "Password to use for domain join."
+       "description": "Provide the password to use for domain join."
       }
     },
     "runCommand": {
