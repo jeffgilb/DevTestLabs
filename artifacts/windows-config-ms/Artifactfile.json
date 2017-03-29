@@ -16,7 +16,7 @@
      "username": {
        "type": "string",
        "displayName": "User Name",
-       "description": "User name to use for domain join."
+       "description": "User name to use for domain join in the domain\\user format."
       },
      "password": {
        "type": "securestring",
