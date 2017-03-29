@@ -1,10 +1,10 @@
 ﻿param(
       [Parameter(valueFromPipeline=$true)]
-	  [String] $domain,
+	  [string] $domain,
       [Parameter(valueFromPipeline=$true)]
-	  [String] $username,
+	  [string] $username,
       [Parameter(valueFromPipeline=$true)]
-	  [SecureString] $password
+	  [string] $password
      )	
 
 ###################################################################################################
