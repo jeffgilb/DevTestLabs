@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
     "title": "Populate AD DS",
     "publisher": "JeffGilb",
-    "description": "Creates custom organizational units for ten business functional units, adds 1,000 ficticious user names (100 to each business unit OU), creates a security group in each OU that includes all members of that OU, and then (optionally) changes their UPN suffix to the suffix provided. Fictitious names courtesy of fakenamegenerator.com and licensed under a Creative Commons Attribution-Share Alike 3.0 United States License: http://creativecommons.org/licenses/by-sa/3.0/us/",
+    "description": "Creates custom organizational units for ten business functional units, adds 1,000 ficticious user names (100 to each business unit OU), creates a security group in each OU that includes all members of that OU. Optionally, you can change all users' UPN suffix and emali address properties to the suffix provided. Fictitious names courtesy of fakenamegenerator.com and licensed under a Creative Commons Attribution-Share Alike 3.0 United States License: http://creativecommons.org/licenses/by-sa/3.0/us/",
     "tags": [
         "Windows"
     ],
@@ -10,7 +10,7 @@
     "parameters": {
      "upnSuffix": {
        "type": "string",
-       "displayName": "OPTIONAL: Alternate UPN suffix",
+       "displayName": "OPTIONAL: Alternate UPN suffix; leave blank to skip.",
        "description": "OPTIONAL: Changes the UPN suffix and email address properties to the specified value for all Active Directory user account objects. Leave blank to skip.",
        "defaultValue": ""
       }
