@@ -1,4 +1,8 @@
-﻿###################################################################################################
+﻿param(
+      [Parameter(valueFromPipeline=$true)]
+	  [String] $upnSuffix
+     )
+###################################################################################################
 # PowerShell configurations
 # NOTE: Because the $ErrorActionPreference is "Stop", this script will stop on first failure.
 #       This is necessary to ensure we capture errors inside the try-catch-finally block.
@@ -317,6 +321,27 @@ foreach ($User in $Users)
 } 
 write-host "$BusUnit OU, users, and group created and populated." 
 
+    # Add alternate UPN suffix to users and set as their email address
+    # Set parameters
+	Import-Module ActiveDirectory 
+	$LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
+	$fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
+
+    # Add alternative upn suffix to domain 
+	Set-ADForest -Identity $fqdn -UPNSuffixes @{Add=$upnSuffix}
+
+    # Add alternative upn suffix to users
+	$users = Get-ADUser -Filter {UserPrincipalName -like '*'} -SearchBase $LDAPpath
+	foreach ($user in $users) { 
+	    $userName = $user.UserPrincipalName.Split('@')[0] 
+	    $UPN = $userName + "@" + $upnSuffix 
+	    $user | Set-ADUser -UserPrincipalName $UPN
+            $user | Set-ADUser -EmailAddress $UPN
+            Write-Host $user.Name" set to "$UPN 
+    }
+write-host "Alternate UPN suffix added to domain and applied to all users." 
+
+write-host "AD DS populated successfully." 
 
 }
 finally
