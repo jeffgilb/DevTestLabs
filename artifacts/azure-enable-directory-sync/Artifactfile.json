@@ -12,14 +12,12 @@
     "User": {
       "type": "string",
       "displayName": "Global admin name.",
-      "description": "Azure AD tenant global administrator name.",
-      "defaultValue": ""
+      "description": "Azure AD tenant global administrator name."
     },
     "Password": {
       "type": "securestring",
       "displayName": "Global admin password.",
-      "description": "Azure AD tenant global administrator password.",
-      "defaultValue": ""
+      "description": "Azure AD tenant global administrator password."
     }
       },
   "runCommand": {
