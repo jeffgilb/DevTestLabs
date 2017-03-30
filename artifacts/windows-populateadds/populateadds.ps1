@@ -321,25 +321,30 @@ foreach ($User in $Users)
 } 
 write-host "$BusUnit OU, users, and group created and populated." 
 
-    # Add alternate UPN suffix to users and set as their email address
-    # Set parameters
-	Import-Module ActiveDirectory 
-	$LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
-	$fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
+     # Check for upnSuffix value
+    	if ($upnSuffix -ne ""){
+    	    # Add alternate UPN suffix to users and set as their email address
+            # Set parameters
+	        Import-Module ActiveDirectory 
+	        $LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
+	        $fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
 
-    # Add alternative upn suffix to domain 
-	Set-ADForest -Identity $fqdn -UPNSuffixes @{Add=$upnSuffix}
+            # Add alternative upn suffix to domain 
+	        Set-ADForest -Identity $fqdn -UPNSuffixes @{Add=$upnSuffix}
 
-    # Add alternative upn suffix to users
-	$users = Get-ADUser -Filter {UserPrincipalName -like '*'} -SearchBase $LDAPpath
-	foreach ($user in $users) { 
-	    $userName = $user.UserPrincipalName.Split('@')[0] 
-	    $UPN = $userName + "@" + $upnSuffix 
-	    $user | Set-ADUser -UserPrincipalName $UPN
+            # Add alternative upn suffix to users
+	        $users = Get-ADUser -Filter {UserPrincipalName -like '*'} -SearchBase $LDAPpath
+	        foreach ($user in $users) { 
+	        $userName = $user.UserPrincipalName.Split('@')[0] 
+	        $UPN = $userName + "@" + $upnSuffix 
+	        $user | Set-ADUser -UserPrincipalName $UPN
             $user | Set-ADUser -EmailAddress $UPN
-            Write-Host $user.Name" set to "$UPN 
-    }
-write-host "Alternate UPN suffix added to domain and applied to all users." 
+   	        }
+        	Write-Host $upnSuffix applied to all users.
+            } 
+        else {
+            Write-Host No alternate UPN suffix requested.
+            }
 
 write-host "AD DS populated successfully." 
 

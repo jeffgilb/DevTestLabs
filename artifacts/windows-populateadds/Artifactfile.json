@@ -11,7 +11,7 @@
      "upnSuffix": {
        "type": "string",
        "displayName": "Alternate UPN suffix to add.",
-       "description": "This parameter is used for the alternate UPN suffix and email properties for all Active Directory user account objects."
+       "description": "OPTIONAL: Changes the UPN suffix and email address properties to the specified value for all Active Directory user account objects. Leave blank to skip."
       }
     },
     "runCommand": {

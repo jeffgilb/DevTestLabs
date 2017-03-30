@@ -77,9 +77,9 @@ try
 	    $UPN = $userName + "@" + $upnSuffix 
 	    $user | Set-ADUser -UserPrincipalName $UPN
             $user | Set-ADUser -EmailAddress $UPN
-            Write-Host $user.Name" set to "$UPN 
-    }
-
+        }
+    
+	Write-Host $upnSuffix applied to all users.
 }
 finally
 {
