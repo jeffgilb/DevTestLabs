@@ -43,9 +43,6 @@ trap
 # Main execution block.
 try
 {
-    # Restart the VM just in case someone is running this artifact right after promoting the DC without restarting it
-	restart-computer
-
     # Create OU structure and populate with ficticious users       
 
     # Get distinguished name of local domain (i.e. DC=corp,DC=jeffgilb,DC=com)
