@@ -8,40 +8,33 @@ If you're wondering how to use these with Azure DevTest labs, go check out my bl
 - [Getting to work with GitHub and Azure DevTest Labs](https://blogs.technet.microsoft.com/jeffgilb/2017/03/31/getting-to-work-with-github-and-azure-devtest-labs/)
 - ...more to come.
 
-> [!IMPORTANT]
+> **IMPORTANT**:
 > Use these at your own risk. No guarantees these will even work :)
 
 ## Azure artifacts
+These artifacts interact with Azure in some form or fashion. You'll most likely need Azure AD global admin credentials for them to work.
 
+|**Artifact name**|Description|
+|---|---|
 | [azure-enable-directory-sync](https://github.com/jeffgilb/DevTestLabs/tree/master/artifacts/azure-enable-directory-sync) | This artifact enables directory synchronization in the Azure portal. You'll need your Azure AD global admin credentials to run this one. It must be done before you use Azure AD Connect to synchronize an on-premises AD DS with Azure AD. |
-|---|---|
 | azure-install-cmdlets | &nbsp; |
-|---|---|
+
 
 
 ## Windows artifacts
+These artifacts work on Windows-based VMs.
 
+|**Artifact name**|Description|
+|---|---|
 | windows-add-upn-suffix | &nbsp; |
-|:---:|:---:|
 | windows-autostartbginfo | &nbsp; |
-|:---:|:---:|
 | windows-azure-ad-connect | &nbsp; |
-|:---:|:---:|
 | windows-azure-app-proxy | &nbsp; |
-|:---:|:---:|
 | windows-config-dc | &nbsp; |
-|:---:|:---:|
 | windows-config-ms | &nbsp; |
-|:---:|:---:|
 | windows-configdc-all | &nbsp; |
-|:---:|:---:|
 | windows-install-ATA1.7.2 | &nbsp; |
-|:---:|:---:|
 | windows-ipconfig | &nbsp; |
-|:---:|:---:|
 | windows-pause | &nbsp; |
-|:---:|:---:|
 | windows-populateadds | &nbsp; |
-|:---:|:---:|
 | windows-restartvm | &nbsp; |
-|:---:|:---:|
