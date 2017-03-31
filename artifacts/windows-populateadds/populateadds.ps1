@@ -314,16 +314,15 @@ try
 
     # Configure UPN suffix
     # Set parameters
-	Import-Module ActiveDirectory 
-	$LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
-	$fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
     
     # Check for upnSuffix value
 	if ($upnSuffix -ne ""){
-    	    # Add alternative upn suffix to domain 
+    	    	Import-Module ActiveDirectory 
+		$LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
+		$fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
+	    # Add alternative upn suffix to domain 
 	        Set-ADForest -Identity $fqdn -UPNSuffixes @{Add=$upnSuffix}
-
-            # Add alternative upn suffix to users and set as their email address
+	    # Add alternative upn suffix to users and set as their email address
 	        $users = Get-ADUser -Filter {UserPrincipalName -like '*'} -SearchBase $LDAPpath
 	        foreach ($user in $users) { 
 	        $userName = $user.UserPrincipalName.Split('@')[0] 
@@ -335,6 +334,10 @@ try
             } 
         else {
             # Add domain FQDN as UPN suffix to users and set as their email address
+    	    	Import-Module ActiveDirectory 
+		$LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
+		$fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
+	    # Add alternative upn suffix to domain 
 	        $users = Get-ADUser -Filter {UserPrincipalName -like '*'} -SearchBase $LDAPpath
 	        foreach ($user in $users) { 
 	        $userName = $user.UserPrincipalName.Split('@')[0] 
