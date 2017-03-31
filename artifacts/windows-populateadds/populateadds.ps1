@@ -310,36 +310,40 @@ try
 	write-host "$BusUnit OU, users, and group created and populated." 
 
 
-<#
-
-     # Check for upnSuffix value
-    	if ($upnSuffix -ne ""){
-    	    # Add alternate UPN suffix to users and set as their email address
-            # Set parameters
-	        Import-Module ActiveDirectory 
-	        $LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
-	        $fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
-
-            # Add alternative upn suffix to domain 
+    # Configure UPN suffix
+    # Set parameters
+	Import-Module ActiveDirectory 
+	$LDAPpath = Get-ADDomain | select -ExpandProperty DistinguishedName    
+	$fqdn=Get-WMIObject Win32_ComputerSystem  | Select-Object -ExpandProperty Domain
+    
+    # Check for upnSuffix value
+	if ($upnSuffix -ne ""){
+    	    # Add alternative upn suffix to domain 
 	        Set-ADForest -Identity $fqdn -UPNSuffixes @{Add=$upnSuffix}
 
-            # Add alternative upn suffix to users
+            # Add alternative upn suffix to users and set as their email address
 	        $users = Get-ADUser -Filter {UserPrincipalName -like '*'} -SearchBase $LDAPpath
 	        foreach ($user in $users) { 
 	        $userName = $user.UserPrincipalName.Split('@')[0] 
 	        $UPN = $userName + "@" + $upnSuffix 
 	        $user | Set-ADUser -UserPrincipalName $UPN
-            $user | Set-ADUser -EmailAddress $UPN
+            	$user | Set-ADUser -EmailAddress $UPN
    	        }
-        	Write-Host $upnSuffix applied to all users.
+            Write-Host Custom $upnSuffix applied to all users.
             } 
         else {
-            Write-Host No alternate UPN suffix requested.
+            # Add domain FQDN as UPN suffix to users and set as their email address
+	        $users = Get-ADUser -Filter {UserPrincipalName -like '*'} -SearchBase $LDAPpath
+	        foreach ($user in $users) { 
+	        $userName = $user.UserPrincipalName.Split('@')[0] 
+	        $UPN = $userName + "@" + $fqdn
+	        $user | Set-ADUser -UserPrincipalName $UPN
+            	$user | Set-ADUser -EmailAddress $UPN
+   	        }
+            Write-Host No alternate UPN suffix requested. Default domain FQDN applied.
             }
 
-#>
-
-write-host "AD DS populated successfully." 
+	write-host "AD DS populated successfully." 
 
 }
 finally
