@@ -3,6 +3,7 @@
 	  [String] $upnSuffix
      )
 ###################################################################################################
+
 # PowerShell configurations
 # NOTE: Because the $ErrorActionPreference is "Stop", this script will stop on first failure.
 #       This is necessary to ensure we capture errors inside the try-catch-finally block.
@@ -308,6 +309,9 @@ try
 	} 
 	write-host "$BusUnit OU, users, and group created and populated." 
 
+
+<#
+
      # Check for upnSuffix value
     	if ($upnSuffix -ne ""){
     	    # Add alternate UPN suffix to users and set as their email address
@@ -332,6 +336,8 @@ try
         else {
             Write-Host No alternate UPN suffix requested.
             }
+
+#>
 
 write-host "AD DS populated successfully." 
 
