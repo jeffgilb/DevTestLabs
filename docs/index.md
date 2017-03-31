@@ -14,14 +14,14 @@ If you're wondering how to use these with Azure DevTest labs, go check out my bl
 ## Azure artifacts
 
 | [azure-enable-directory-sync](https://github.com/jeffgilb/DevTestLabs/tree/master/artifacts/azure-enable-directory-sync) | This artifact enables directory synchronization in the Azure portal. You'll need your Azure AD global admin credentials to run this one. It must be done before you use Azure AD Connect to synchronize an on-premises AD DS with Azure AD. |
-|:---:|:---:|
+|---|---|
 | azure-install-cmdlets | &nbsp; |
-|:---:|:---:|
+|---|---|
 
 
 ## Windows artifacts
 
-| windows-add-upn-suffix ![Check][12] | &nbsp; |
+| windows-add-upn-suffix | &nbsp; |
 |:---:|:---:|
 | windows-autostartbginfo | &nbsp; |
 |:---:|:---:|
