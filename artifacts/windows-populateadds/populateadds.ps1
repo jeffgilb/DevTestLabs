@@ -308,6 +308,8 @@ try
 	    Add-ADGroupMember $Group -Members $Sam -Server localhost
 	} 
 	write-host "$BusUnit OU, users, and group created and populated." 
+    # Add a blank line after OUs and before UPN stuff
+	write-host
 
 
     # Configure UPN suffix
@@ -329,7 +331,7 @@ try
 	        $user | Set-ADUser -UserPrincipalName $UPN
             	$user | Set-ADUser -EmailAddress $UPN
    	        }
-            Write-Host Custom $upnSuffix applied to all users.
+            Write-Host Custom $upnSuffix UPN suffix applied to all users.
             } 
         else {
             # Add domain FQDN as UPN suffix to users and set as their email address
