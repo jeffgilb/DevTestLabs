@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2015-01-01/dtlArtifacts.json",
   "title": "IPCONFIG Information",
   "publisher": "JeffGilb",
-  "description": "Returns IPCONFIG inforamtion.",
+  "description": "Returns IPCONFIG information.",
   "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-ipconfig/jeff.png",
   "targetOsType": "Windows",
     "tags": [
