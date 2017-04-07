@@ -19,8 +19,11 @@
       "displayName": "Global admin password.",
       "description": "Azure AD tenant global administrator password."
     }
-      },
+   },
   "runCommand": {
     "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass \"& ./enableSync.ps1 -User ''', parameters('User'), ''' -Password ''', parameters('Password'), '''')]"
    }
   }
+
+
+
