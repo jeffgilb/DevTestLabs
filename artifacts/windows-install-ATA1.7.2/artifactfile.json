@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2015-01-01/dtlArtifacts.json",
   "title": "Install ATA",
   "publisher": "JeffGilb",
-  "description": "Installs ATA 1.7.2.",
+  "description": "Installs ATA 1.7.2 at the IP address provided for the local VM the script is run on and then adds the specified user to the ATA Administrator's Group.",
   "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-install-ATA1.7.2/jeff.png",
   "targetOsType": "Windows",
     "tags": [
