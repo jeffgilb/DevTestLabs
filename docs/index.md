@@ -5,7 +5,8 @@ If you're wondering how to use these with Azure DevTest labs, go check out my bl
 - [Getting to know Azure DevTest Labs](https://blogs.technet.microsoft.com/jeffgilb/2017/03/10/getting-to-know-azure-devtest-labs/)
 - [Creating your first VMs with Azure DevTest Labs](https://blogs.technet.microsoft.com/jeffgilb/2017/03/16/creating-your-first-vms-with-azure-devtest-labs/)
 - [Connect your GitHub repo to Azure DevTest Labs](https://blogs.technet.microsoft.com/jeffgilb/2017/03/20/connect-your-github-repo-to-azure-devtest-labs/)
-- [Getting to work with GitHub and Azure DevTest Labs](https://blogs.technet.microsoft.com/jeffgilb/2017/03/31/getting-to-work-with-github-and-azure-devtest-labs/)
+- [Getting to work with GitHub and Azure DevTest Labs](https://blogs.technet.microsoft.com/jeffgilb/2017/03/31/getting-to-work-with-github-and-azure-devtest-labs/)\
+- [Your first DevTest Labs artifact--JSON file](https://blogs.technet.microsoft.com/jeffgilb/2017/04/07/your-first-devtest-labs-artifact-json-file/)
 - ...more to come.
 
 > **IMPORTANT**:
