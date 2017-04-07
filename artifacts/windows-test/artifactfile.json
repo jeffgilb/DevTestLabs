@@ -12,6 +12,6 @@
     }
   },
   "runCommand": {
-    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass -File pause.ps1 -Seconds ''', parameters('Seconds'), '''')]"
+    "commandToExecute": "[concat('powershell.exe -ExecutionPolicy bypass -File ./pause.ps1 -Seconds ''', parameters('Seconds'), '''')]"
   }
 }
