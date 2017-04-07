@@ -5,7 +5,7 @@
     "description": "Downloads and installs the latest version of Azure AD Connect.",
     "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-azure-ad-connect/azure.PNG",
     "tags": [
-        "Windows"
+        "AAD"
     ],
     "targetOsType": "Windows",
     "runCommand": {
