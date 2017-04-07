@@ -13,7 +13,7 @@
       "type": "string",
       "displayName": "Pause length",
       "description": "Specifies the length of time to pause (in seconds).",
-      "defaultValue": ""
+      "defaultValue": "300"
     }
   },
   "runCommand": {
