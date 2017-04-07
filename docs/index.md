@@ -17,7 +17,7 @@ These artifacts interact with Azure in some form or fashion. You'll most likely 
 |**Artifact name**|Description|
 |---|---|
 | [azure-enable-directory-sync](https://github.com/jeffgilb/DevTestLabs/tree/master/artifacts/azure-enable-directory-sync) | This artifact enables directory synchronization in the Azure portal. You'll need your Azure AD global admin credentials to run this one. It must be done before you use Azure AD Connect to synchronize an on-premises AD DS with Azure AD. |
-| azure-install-cmdlets | &nbsp; |
+| [azure-install-cmdlets](https://github.com/jeffgilb/DevTestLabs/tree/master/artifacts/azure-install-cmdlets) | Installs the Microsoft Online Services Sign-In Assistant for IT Professionals RTW from http://go.microsoft.com/fwlink/?LinkID=286152 and then installs Azure AD PowerShell cmdlets from http://go.microsoft.com/fwlink/p/?linkid=236297. Best to run with no one logged in." |
 
 
 
@@ -26,11 +26,11 @@ These artifacts work on Windows-based VMs.
 
 |**Artifact name**|Description|
 |---|---|
-| windows-add-upn-suffix | &nbsp; |
-| windows-autostartbginfo | &nbsp; |
-| windows-azure-ad-connect | &nbsp; |
-| windows-azure-app-proxy | &nbsp; |
-| windows-config-dc | &nbsp; |
+| [windows-add-upn-suffix](https://github.com/jeffgilb/DevTestLabs/tree/master/artifacts/windows-add-upn-suffix) | Adds a specified alternate UPN suffix to Active Directory Domains and Trusts and then assigns it to all users. Sets the users' email address properties to use the new alternate UPN suffix. Don't forget to Use this in preparation for synchronizing users to Azure AD. |
+| [windows-autostartbginfo](https://github.com/jeffgilb/DevTestLabs/tree/master/artifacts/windows-autostartbginfo) | Creates a custom Startup shortcut for bginfo from Sysinternals (by Mark Russinovich). Uses a custom config file (.bgi) co-located with bginfo.exe. IMPORTANT: This requires that the Sysinternals Artifact has been run first. |
+| [windows-azure-ad-connect](https://github.com/jeffgilb/DevTestLabs/tree/master/artifacts/windows-azure-ad-connect) | Downloads and installs the latest version of Azure AD Connect. |
+| [windows-azure-app-proxy](https://github.com/jeffgilb/DevTestLabs/tree/master/artifacts/windows-azure-app-proxy) | Installs and registers the AAD App Proxy Connector to enable a secure connection between applications inside your network and the Application Proxy & Azure. Only one installation is necessary to service all your published applications; a second connector can be installed for high availability purposes. |
+| [windows-config-dc](https://github.com/jeffgilb/DevTestLabs/tree/master/artifacts/windows-config-dc) | Performs base configurations on domain controller VMs: turns off IE advanced security, enables downloads from IE, installs Active Directory Users and Computers snap-in, creates a custom Startup shortcut for bginfo from Sysinternals (by Mark Russinovich) using a custom config file (.bgi) co-located with bginfo.exe, and then restarts the VM. **IMPORTANT**: This requires that the Sysinternals Artifact has been run first! |
 | windows-config-ms | &nbsp; |
 | windows-configdc-all | &nbsp; |
 | windows-install-ATA1.7.2 | &nbsp; |
