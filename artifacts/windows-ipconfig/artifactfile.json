@@ -4,7 +4,7 @@
   "publisher": "JeffGilb",
   "description": "Returns IPCONFIG information for the local VM.",
   "iconUri": "https://raw.githubusercontent.com/jeffgilb/devtestlabs/master/artifacts/windows-ipconfig/jeff.png",
-  "targetOsType": "Windows",
+  "targetOsType": "Windows", 
     "tags": [
       "IPCONFIG"
   ],
